@@ -11,7 +11,6 @@ const participants: Participant[] = [
   { name: "正宗", socialUrl: "https://x.com/Masamune_HS", comment: "主催です、今年も楽しんでいきましょう。", iconUrl: "https://pbs.twimg.com/profile_images/1179249708864163840/6Rt_VgNR_400x400.jpg"},
   { name: "釖(料理長)", socialUrl: "https://x.com/oriharakatana", comment: "全員俺と胃袋のMAVになって欲しいんだ", iconUrl: "https://pbs.twimg.com/profile_images/1459826223606280197/g4dwLZVC_400x400.jpg" },
   { name: "IK", socialUrl: "https://x.com/Tec_hnoBreaker", comment: "酒、飯、音、全部満喫します", iconUrl: "https://pbs.twimg.com/profile_images/1422972035685228545/az3W9KRm_400x400.jpg" },
-  { name: "虹水晶(調理補佐)", socialUrl: "https://x.com/suisyou_rainbow", comment: "食事に関してはおまかせください！！", iconUrl: "https://pbs.twimg.com/profile_images/1641986250822524931/DIxa97cp_400x400.jpg" },
   { name: "まいんず", comment: "アラサーでも青春やり直したい" },
   { name: "ron3lyscript", socialUrl: "https://x.com/ron3lyscript", comment: "好きな音楽で踊ったり好きな音楽について話したりしましょう", iconUrl: "https://pbs.twimg.com/profile_images/1289137295157731329/4ZOi5K9Z_400x400.jpg" },
   { name: "うさぎつね", socialUrl: "https://x.com/aghves", comment: "毎年の楽しみです！今年もたくさん遊ぶぞ！！", iconUrl: "https://pbs.twimg.com/profile_images/1620386910584852480/9YdRYqGE_400x400.jpg" },
@@ -40,6 +39,7 @@ const participants: Participant[] = [
   { name: "Drumsuko" },
   { name: "SHUU00"},
   { name: "AMANE"}
+  { name: "hueso" },
 ];
 
 export default participants;
