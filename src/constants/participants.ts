@@ -38,7 +38,7 @@ const participants: Participant[] = [
   { name: "まーしぃ" },
   { name: "Drumsuko" },
   { name: "SHUU00"},
-  { name: "AMANE"}
+  { name: "AMANE"},
   { name: "hueso" },
 ];
 
