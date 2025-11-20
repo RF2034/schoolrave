@@ -42,6 +42,9 @@ const participants: Participant[] = [
   { name: "hueso" },
   { name: "きゅーまる"},
   { name: "🔺三角🔺"},
+  { name: "Sana Logic"},
+  { name: "masakoha" },
+  { name: "ゆじゅ" }
   
 ];
 
