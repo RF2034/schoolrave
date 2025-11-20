@@ -45,7 +45,6 @@ const participants: Participant[] = [
   { name: "Sana Logic"},
   { name: "masakoha" },
   { name: "ゆじゅ" }
-  
 ];
 
 export default participants;
