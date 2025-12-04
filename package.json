@@ -11,8 +11,8 @@
   "dependencies": {
     "@twemoji/api": "^16.0.1",
     "googleapis": "^150.0.1",
-    "next": "15.3.3",
-    "react": "^19.0.0",
+    "next": "^15.5.7",
+    "react": "^19.2.1",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0"
   },
