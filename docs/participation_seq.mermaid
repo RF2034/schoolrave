@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant 参加者
+    participant 公式サイト
+    participant Googleフォーム
+    participant スケジュール管理
+    participant Discord
+    participant スプレッドシート
+
+    参加者 ->> 公式サイト: サイトにアクセスして情報を確認
+    公式サイト ->> Googleフォーム: 申し込み情報を入力
+    Googleフォーム->> スプレッドシート: 申し込み情報を登録
+    Googleフォーム ->> スケジュール管理: 新規参加者加入申請通知
+    スケジュール管理 ->> 参加者: Discordサーバーの招待送信
+    参加者 ->> Discord: サーバーに加入
+    Googleフォーム->>公式サイト: 申し込み情報を反映
+    参加者 ->> Discord: 確認に必要なロールをリアクションでロールのbotで手動で取得
