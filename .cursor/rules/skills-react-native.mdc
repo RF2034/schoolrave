@@ -1,0 +1,34 @@
+---
+description: React Native/Expo ベストプラクティス - リスト、アニメーション、UI
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# React Native / Expo
+
+React Native/Expo のコードを扱う場合に適用。
+
+## CRITICAL: レンダリング
+
+- `{value && <Component />}` で value が "" や 0 だとクラッシュ → 三項演算子または `!!value`
+- 文字列は必ず `<Text>` 内に配置
+
+## リストパフォーマンス
+
+- ScrollView + map ではなく FlashList/LegendList で仮想化
+- renderItem 内でインラインオブジェクトを作らない（memoが効かなくなる）
+- コールバックはルートで1つ定義し、item.id を渡す
+- リストアイテムは軽量に（クエリ、重い計算は親で）
+
+## アニメーション
+
+- `width`, `height`, `margin` ではなく `transform`, `opacity` をアニメーション
+- 派生値は `useDerivedValue`（`useAnimatedReaction` は副作用用）
+- プレスアニメーションは GestureDetector + Gesture.Tap
+
+## UI
+
+- `expo-image` を画像に使用
+- `Pressable` を TouchableOpacity の代わりに使用
+- ネイティブナビゲーター（native-stack, react-native-bottom-tabs）
+- スクロール位置は `useState` ではなく `useSharedValue` または `useRef`

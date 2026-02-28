@@ -1,0 +1,22 @@
+---
+description: Web Interface Guidelines - UIレビュー、アクセシビリティ、デザイン監査
+globs: "**/*.{tsx,jsx,html,css}"
+alwaysApply: false
+---
+
+# Web Design Guidelines
+
+UIレビュー、アクセシビリティチェック、デザイン監査を依頼された場合に適用。
+
+## 手順
+
+1. 最新ガイドラインを取得:
+   ```
+   https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md
+   ```
+2. 指定ファイルを読み、ガイドラインの全ルールでチェック
+3. 結果を `file:line` 形式で出力
+
+## 適用タイミング
+
+- 「UIをレビューして」「アクセシビリティを確認して」「デザインを監査して」などの依頼時

@@ -1,0 +1,31 @@
+---
+description: 設定済みSkillsの概要 - Composition, React/Next.js Performance, React Native, Web Design
+alwaysApply: true
+---
+
+# 設定済み Skills 概要
+
+このプロジェクトでは以下のSkillsを参照する。タスクに応じて適切なルールを適用する。
+
+## 1. vercel-composition-patterns (React構成パターン)
+
+- **適用**: コンポーネントリファクタ、複合コンポーネント、コンテキスト設計
+- **要点**: boolean propsの増殖を避け、compositionで解決。Compound Components + Contextで柔軟なAPIを設計
+- **詳細**: `skills-composition-patterns.mdc`
+
+## 2. vercel-react-best-practices (React/Next.js パフォーマンス)
+
+- **適用**: React/Next.jsコンポーネント、データフェッチ、バンドル最適化
+- **要点**: Waterfall排除(CRITICAL)、バンドル最適化、Server/Client最適化、再レンダー抑制
+- **詳細**: `skills-react-nextjs-performance.mdc`
+
+## 3. vercel-react-native-skills (React Native/Expo)
+
+- **適用**: React Native/Expoコンポーネント、リスト最適化、アニメーション
+- **要点**: FlashList/LegendListで仮想化、expo-image、Pressable、ネイティブナビゲーター
+- **詳細**: `skills-react-native.mdc`
+
+## 4. web-design-guidelines (Web UIガイドライン)
+
+- **適用**: UIレビュー、アクセシビリティ、デザイン監査
+- **要点**: https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md を取得してチェック

@@ -1,0 +1,39 @@
+---
+description: React Composition Patterns - 複合コンポーネント、boolean props回避、状態管理
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# React Composition Patterns
+
+## 1. Boolean Propsの増殖を避ける
+
+`isThread`, `isEditing` などのboolean propsで分岐しない。compositionで明示的なバリアントコンポーネントを作る。
+
+```tsx
+// ❌ BAD
+<Composer isThread isEditing={false} channelId="abc" />
+
+// ✅ GOOD
+<ThreadComposer channelId="abc" />
+<EditMessageComposer messageId="xyz" />
+```
+
+## 2. Compound Components + Context
+
+複雑なコンポーネントは共有Contextを持つ複合コンポーネントとして構成。`Composer.Frame`, `Composer.Input`, `Composer.Submit` のように分割。
+
+## 3. 状態管理の分離
+
+- Providerが状態管理の唯一の責務を持つ
+- Context interface: `state`, `actions`, `meta` の3つで定義
+- UIコンポーネントはContext interfaceのみに依存（useState/Zustandの実装は知らない）
+
+## 4. Children over Render Props
+
+`renderHeader`, `renderFooter` より `children` でcomposeする。
+
+## 5. React 19+
+
+- `forwardRef` は使わない（refは通常のprop）
+- `useContext()` の代わりに `use()` を使用
