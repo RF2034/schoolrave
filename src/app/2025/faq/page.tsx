@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "ガッコウレイヴ2025に関するよくある質問と回答をまとめています。",
 };
 
-export default function FAQ() {
+export default function FAQ2025() {
   return (
     <div className="min-h-screen bg-base-200 pt-16">
       <Header />
@@ -22,3 +22,4 @@ export default function FAQ() {
     </div>
   );
 }
+

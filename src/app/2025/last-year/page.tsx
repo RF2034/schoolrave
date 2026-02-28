@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   description: "ガッコウレイヴ2024の開催レポート、参加者の感想、写真ギャラリーをご覧いただけます。",
 };
 
-export default function LastYear() {
+export default function LastYear2025() {
   return (
     <div className="min-h-screen bg-base-200 pt-16">
       <Header />
       <main className="container mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold text-center mb-12">昨年の様子</h1>
-        
+
         <div className="space-y-12">
           <PhotoGallery />
           {/* <VoicesSection /> */}
@@ -26,3 +26,4 @@ export default function LastYear() {
     </div>
   );
 }
+

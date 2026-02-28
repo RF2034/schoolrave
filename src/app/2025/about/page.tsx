@@ -12,13 +12,13 @@ export const metadata: Metadata = {
   description: `${EVENT_INFO.title}のイベント概要、開催日時、会場情報などをご確認いただけます。`,
 };
 
-export default function About() {
+export default function About2025() {
   return (
     <div className="min-h-screen bg-base-200 pt-16">
       <Header />
       <main className="container mx-auto px-4 py-16 text-base-content">
         <h1 className="text-4xl font-bold text-center mb-12">概要</h1>
-        
+
         <div className="space-y-8">
           <AboutEventInfoCard />
           <AboutParticipationCard />
@@ -31,3 +31,4 @@ export default function About() {
     </div>
   );
 }
+
