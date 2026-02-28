@@ -51,7 +51,7 @@ const ConceptSection = () => (
         </div>
       </div>
       <div className="mt-12 flex justify-center">
-        <Link href="/about" className="btn btn-outline btn-lg">概要を見る</Link>
+        <Link href="/2025/about" className="btn btn-outline btn-lg">概要を見る</Link>
       </div>
     </div>
   </section>

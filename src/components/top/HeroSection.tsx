@@ -22,7 +22,7 @@ const HeroSection = () => (
         </h2>
         <div className="flex flex-col gap-4 justify-center items-center">
           <RegistrationButton size="3xl" />
-          <Link href="/about" className="btn btn-soft btn-lg">概要を見る</Link>
+          <Link href="/2025/about" className="btn btn-soft btn-lg">概要を見る</Link>
         </div>
       </div>
     </div>
