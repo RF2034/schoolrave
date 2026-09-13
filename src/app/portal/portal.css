@@ -1,0 +1,281 @@
+/* ポータル専用。デジタル庁デザインシステム（DADS）の方針を加工して適用。
+   出典：https://design.digital.go.jp/dads/ */
+
+.portal {
+  --portal-bg: #f1f1f1;
+  --portal-surface: #ffffff;
+  --portal-ink: #1a1a1c;
+  --portal-muted: #54545c;
+  --portal-border: #d8d8dc;
+  --portal-border-strong: #1a1a1c;
+  --portal-link: #0017c1;
+  --portal-link-hover: #000082;
+  --portal-link-visited: #a52ebc;
+  --portal-focus: #ffdd00;
+  --portal-max: 45rem;
+
+  min-height: 100vh;
+  margin: 0;
+  background: var(--portal-bg);
+  color: var(--portal-ink);
+  font-family: "LINE Seed JP", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.portal__inner {
+  box-sizing: border-box;
+  max-width: var(--portal-max);
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.portal a {
+  color: var(--portal-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.portal a:visited {
+  color: var(--portal-link-visited);
+}
+
+.portal a:hover {
+  color: var(--portal-link-hover);
+  text-decoration-thickness: 2px;
+}
+
+.portal a:focus-visible {
+  outline: 4px solid var(--portal-border-strong);
+  outline-offset: 2px;
+  background-color: var(--portal-focus);
+}
+
+.portal__header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 3px solid var(--portal-border-strong);
+}
+
+.portal__label {
+  margin: 0 0 0.35rem;
+  color: var(--portal-muted);
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+}
+
+.portal__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.5rem, 4vw, 1.875rem);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.portal__meta {
+  margin: 0;
+  color: var(--portal-muted);
+  font-size: 0.9375rem;
+}
+
+.portal__section {
+  margin-bottom: 1rem;
+  padding: 1.25rem 1.35rem 1.4rem;
+  border: 1px solid var(--portal-border);
+  border-radius: 0;
+  background: var(--portal-surface);
+}
+
+.portal__section-title {
+  margin: 0 0 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--portal-border-strong);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.portal__notice-date {
+  margin: 0 0 0.35rem;
+  color: var(--portal-muted);
+  font-size: 0.875rem;
+}
+
+.portal__notice-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.portal__dl {
+  margin: 0;
+}
+
+.portal__dl dt {
+  margin-top: 0.65rem;
+  font-weight: 700;
+}
+
+.portal__dl dt:first-child {
+  margin-top: 0;
+}
+
+.portal__dl dd {
+  margin: 0.15rem 0 0;
+}
+
+.portal__note {
+  margin: 0.85rem 0 0;
+  color: var(--portal-muted);
+  font-size: 0.9375rem;
+}
+
+.portal__note--tight {
+  margin-top: 0.5rem;
+}
+
+.portal__pending {
+  margin: 0;
+  color: var(--portal-muted);
+  font-weight: 700;
+}
+
+.portal__table-wrap {
+  overflow-x: auto;
+}
+
+.portal__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.portal__table th,
+.portal__table td {
+  padding: 0.7rem 0.5rem;
+  border-bottom: 1px solid var(--portal-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.portal__table thead th {
+  border-bottom: 2px solid var(--portal-border-strong);
+  color: var(--portal-ink);
+  font-size: 0.875rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.portal__table tbody tr:last-child th,
+.portal__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.portal__empty {
+  color: var(--portal-muted);
+}
+
+.portal__tree-label {
+  margin: 1rem 0 0.35rem;
+  color: var(--portal-muted);
+  font-size: 0.9375rem;
+}
+
+.portal__tree {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--portal-border);
+  background: var(--portal-bg);
+  color: var(--portal-ink);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  white-space: pre;
+}
+
+.portal__footer {
+  margin-top: 2rem;
+  color: var(--portal-muted);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.portal__footer p {
+  margin: 0.35rem 0 0;
+}
+
+.portal__link-block {
+  margin: 0;
+  font-weight: 700;
+}
+
+.portal__ext-icon {
+  display: inline-block;
+  margin-left: 0.2em;
+  vertical-align: -0.1em;
+}
+
+.portal__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 560px) {
+  .portal__inner {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .portal__section {
+    padding: 1.1rem 1rem 1.2rem;
+  }
+
+  .portal__table,
+  .portal__table thead,
+  .portal__table tbody,
+  .portal__table th,
+  .portal__table td,
+  .portal__table tr {
+    display: block;
+  }
+
+  .portal__table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .portal__table tr {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--portal-border);
+  }
+
+  .portal__table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .portal__table td {
+    border: none;
+    padding: 0.15rem 0;
+  }
+
+  .portal__table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.1rem;
+    color: var(--portal-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+}
