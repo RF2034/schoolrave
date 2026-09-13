@@ -1,4 +1,3 @@
-
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -29,7 +28,7 @@ const HeroSlideshow = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setIsTransitioning(true);
-      
+
       setTimeout(() => {
         // トランジション完了後、状態を更新
         setCurrentIndex(nextIndex);
@@ -57,7 +56,11 @@ const HeroSlideshow = () => {
         priority
         sizes="100vw"
         className="!w-full !h-full !object-cover !absolute !inset-0"
-        style={{ opacity: 1, transition: "opacity 0.5s ease-in-out", pointerEvents: "none" }}
+        style={{
+          opacity: 1,
+          transition: "opacity 0.5s ease-in-out",
+          pointerEvents: "none",
+        }}
         draggable={false}
         unoptimized
       />
@@ -70,7 +73,11 @@ const HeroSlideshow = () => {
           fill
           sizes="100vw"
           className="!w-full !h-full !object-cover !absolute !inset-0"
-          style={{ opacity: 1, transition: "opacity 0.5s ease-in-out", pointerEvents: "none" }}
+          style={{
+            opacity: 1,
+            transition: "opacity 0.5s ease-in-out",
+            pointerEvents: "none",
+          }}
           draggable={false}
           unoptimized
         />

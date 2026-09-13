@@ -65,10 +65,16 @@ export default function SiteHeader2026() {
       {/* PC: 固定ヘッダー（モバイルでは非表示・レイアウト占有なし） */}
       <header className={desktopNavClass}>
         <div className="site-header-2026__inner">
-          <Link href="/2026#top" className="site-header-2026__logo font-display-en">
+          <Link
+            href="/2026#top"
+            className="site-header-2026__logo font-display-en"
+          >
             {SITE_2026.hero.titleJa}
           </Link>
-          <nav className="site-header-2026__nav font-display-en" aria-label="ページ内">
+          <nav
+            className="site-header-2026__nav font-display-en"
+            aria-label="ページ内"
+          >
             <ul className="flex flex-wrap items-center justify-end gap-6">
               {SITE_2026.nav.map((item) => (
                 <li key={item.id}>
@@ -91,7 +97,10 @@ export default function SiteHeader2026() {
       {/* モバイル: スクロールアップで一時表示 */}
       <header className={mobileHeaderClass}>
         <div className="site-header-2026__inner site-header-2026__inner--mobile">
-          <Link href="/2026#top" className="site-header-2026__logo font-display-en">
+          <Link
+            href="/2026#top"
+            className="site-header-2026__logo font-display-en"
+          >
             {SITE_2026.hero.titleJa}
           </Link>
           <button
@@ -118,10 +127,7 @@ export default function SiteHeader2026() {
             <ul className="flex flex-col gap-3 px-4 pb-4">
               {SITE_2026.nav.map((item) => (
                 <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    onClick={() => setOpen(false)}
-                  >
+                  <a href={`#${item.id}`} onClick={() => setOpen(false)}>
                     {item.labelEn}
                   </a>
                 </li>

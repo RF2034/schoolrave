@@ -34,7 +34,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_2026.meta.title,
     description: SITE_2026.meta.description,
-    images: ["https://logos.schoolrave.net/cdn-cgi/image/f=webp/schoolrave_OGP_B.png"],
+    images: [
+      "https://logos.schoolrave.net/cdn-cgi/image/f=webp/schoolrave_OGP_B.png",
+    ],
   },
 };
 

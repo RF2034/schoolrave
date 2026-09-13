@@ -4,9 +4,13 @@ type ContactInfo2026Props = {
   className?: string;
 };
 
-export default function ContactInfo2026({ className = "" }: ContactInfo2026Props) {
+export default function ContactInfo2026({
+  className = "",
+}: ContactInfo2026Props) {
   return (
-    <p className={`text-sm leading-relaxed text-[var(--2026-muted)] md:text-base ${className}`}>
+    <p
+      className={`text-sm leading-relaxed text-[var(--2026-muted)] md:text-base ${className}`}
+    >
       {SITE_2026.contact.lead}
       <a
         href={SITE_2026.social.xUrl}

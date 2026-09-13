@@ -1,4 +1,3 @@
-
 import React from "react";
 
 export type TimetableItem = {
@@ -25,7 +24,9 @@ export default function TimetableDay({ title, items }: TimetableDayProps) {
             </li>
             <li key={`desc-${idx}`}>
               <hr />
-              <div className="timeline-end timeline-box ml-4 text-sm">{item.description}</div>
+              <div className="timeline-end timeline-box ml-4 text-sm">
+                {item.description}
+              </div>
               <hr />
             </li>
           </React.Fragment>

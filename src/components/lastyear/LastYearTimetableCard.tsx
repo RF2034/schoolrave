@@ -14,10 +14,16 @@ const day1: TimetableItem[] = [
 ];
 
 const day2: TimetableItem[] = [
-  { time: "07:00", description: "Sound of Sunrise（House, Techno etc） @音楽室" },
+  {
+    time: "07:00",
+    description: "Sound of Sunrise（House, Techno etc） @音楽室",
+  },
   { time: "09:00", description: "ボドゲ会 @多目的室" },
   { time: "10:30", description: "ブランチタイム" },
-  { time: "12:00", description: "パラグライダー体験（希望者のみ） @さる小近隣" },
+  {
+    time: "12:00",
+    description: "パラグライダー体験（希望者のみ） @さる小近隣",
+  },
   { time: "12:30", description: "デジゲー会 @多目的室" },
   { time: "15:00", description: "Coffee & Music（downtempo） @図工室" },
   { time: "15:30", description: "Purpose ep.EX（DnB） @音楽室" },

@@ -24,8 +24,7 @@ const EventDetailSection = () => (
           allowFullScreen={true}
           referrerPolicy="no-referrer-when-downgrade"
           className="rounded-lg border-0 w-full h-full"
-        >
-        </iframe>
+        ></iframe>
       </div>
     </div>
   </section>

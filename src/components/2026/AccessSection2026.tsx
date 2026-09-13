@@ -16,7 +16,10 @@ export default function AccessSection2026() {
           <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:items-start">
             <ul className="space-y-4 text-base leading-relaxed md:text-lg">
               {SITE_2026.access.lines.map((line) => (
-                <li key={line} className="border-b border-dashed border-[var(--2026-rule)] pb-4">
+                <li
+                  key={line}
+                  className="border-b border-dashed border-[var(--2026-rule)] pb-4"
+                >
                   {line}
                 </li>
               ))}

@@ -5,16 +5,25 @@ interface RegistrationButtonProps {
   className?: string;
 }
 
-export default function RegistrationButton({ size = "md", className = "" }: RegistrationButtonProps) {
-  const sizeClass = size === "3xl" ? "btn text-2xl px-14 py-8" :
-                    size === "2xl" ? "btn text-xl px-10 py-8" :
-                    size === "xl" ? "btn btn-xl" :
-                    size === "lg" ? "btn btn-lg" : 
-                    size === "sm" ? "btn-sm md:btn-md" : 
-                    "btn-md";
+export default function RegistrationButton({
+  size = "md",
+  className = "",
+}: RegistrationButtonProps) {
+  const sizeClass =
+    size === "3xl"
+      ? "btn text-2xl px-14 py-8"
+      : size === "2xl"
+        ? "btn text-xl px-10 py-8"
+        : size === "xl"
+          ? "btn btn-xl"
+          : size === "lg"
+            ? "btn btn-lg"
+            : size === "sm"
+              ? "btn-sm md:btn-md"
+              : "btn-md";
 
   return (
-    <a 
+    <a
       href={EVENT_INFO.registrationUrl}
       target="_blank"
       rel="noopener noreferrer"

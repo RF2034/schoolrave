@@ -1,8 +1,6 @@
-
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
 
 const PhotoGallery = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -43,11 +41,17 @@ const PhotoGallery = () => {
         <div className="w-full max-w-xl">
           <div className="carousel rounded-box relative flex justify-center items-center min-h-[200px]">
             {loading ? (
-              <div className="w-full flex justify-center items-center py-12 text-lg text-gray-500">画像を読み込み中...</div>
+              <div className="w-full flex justify-center items-center py-12 text-lg text-gray-500">
+                画像を読み込み中...
+              </div>
             ) : error ? (
-              <div className="w-full flex justify-center items-center py-12 text-red-500">{error}</div>
+              <div className="w-full flex justify-center items-center py-12 text-red-500">
+                {error}
+              </div>
             ) : images.length === 0 ? (
-              <div className="w-full flex justify-center items-center py-12 text-gray-500">画像がありません</div>
+              <div className="w-full flex justify-center items-center py-12 text-gray-500">
+                画像がありません
+              </div>
             ) : (
               <div className="relative w-full aspect-[16/9] flex justify-center items-center bg-base-200 overflow-hidden">
                 {images.map((src, idx) => (
@@ -55,9 +59,9 @@ const PhotoGallery = () => {
                     key={src}
                     src={src}
                     alt={`フォト${idx + 1}`}
-                    className={`absolute left-0 top-0 w-full h-full object-cover transition-opacity duration-150 ${current === idx ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                    className={`absolute left-0 top-0 w-full h-full object-cover transition-opacity duration-150 ${current === idx ? "opacity-100 z-10" : "opacity-0 z-0"}`}
                     draggable={false}
-                    style={{ pointerEvents: current === idx ? 'auto' : 'none' }}
+                    style={{ pointerEvents: current === idx ? "auto" : "none" }}
                     fill
                     priority={idx === current}
                     sizes="(max-width: 640px) 100vw, 640px"
@@ -72,7 +76,9 @@ const PhotoGallery = () => {
             <div className="flex justify-center gap-4 mt-4">
               <button
                 className="btn btn-circle btn-outline"
-                onClick={() => setCurrent(current === 0 ? images.length - 1 : current - 1)}
+                onClick={() =>
+                  setCurrent(current === 0 ? images.length - 1 : current - 1)
+                }
                 aria-label="前の画像"
                 type="button"
                 disabled={images.length === 0}
@@ -81,7 +87,9 @@ const PhotoGallery = () => {
               </button>
               <button
                 className="btn btn-circle btn-outline"
-                onClick={() => setCurrent(current === images.length - 1 ? 0 : current + 1)}
+                onClick={() =>
+                  setCurrent(current === images.length - 1 ? 0 : current + 1)
+                }
                 aria-label="次の画像"
                 type="button"
                 disabled={images.length === 0}

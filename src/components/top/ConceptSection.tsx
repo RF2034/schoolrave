@@ -16,7 +16,9 @@ const ConceptSection = () => (
               />
             </figure>
             <div className="card-body text-center">
-              <h3 className="card-title justify-center text-lg mb-2">🎵 複数のDJフロア</h3>
+              <h3 className="card-title justify-center text-lg mb-2">
+                🎵 複数のDJフロア
+              </h3>
               <p>様々なジャンルの音楽を楽しめます</p>
             </div>
           </div>
@@ -28,7 +30,9 @@ const ConceptSection = () => (
               />
             </figure>
             <div className="card-body text-center">
-              <h3 className="card-title justify-center text-lg mb-2">🍕 フード & ドリンク</h3>
+              <h3 className="card-title justify-center text-lg mb-2">
+                🍕 フード & ドリンク
+              </h3>
               <p>美味しい料理とドリンクをご用意</p>
             </div>
           </div>
@@ -40,7 +44,9 @@ const ConceptSection = () => (
               />
             </figure>
             <div className="card-body text-center">
-              <h3 className="card-title justify-center text-lg mb-2">☕ 参加者企画</h3>
+              <h3 className="card-title justify-center text-lg mb-2">
+                ☕ 参加者企画
+              </h3>
               <p>
                 コーヒースタンド
                 <br />
@@ -51,7 +57,9 @@ const ConceptSection = () => (
         </div>
       </div>
       <div className="mt-12 flex justify-center">
-        <Link href="/2025/about" className="btn btn-outline btn-lg">概要を見る</Link>
+        <Link href="/2025/about" className="btn btn-outline btn-lg">
+          概要を見る
+        </Link>
       </div>
     </div>
   </section>

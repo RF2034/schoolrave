@@ -25,10 +25,8 @@ export default function About2025() {
           <AboutIntro />
           <AboutPlansCard />
         </div>
-
       </main>
       <Footer />
     </div>
   );
 }
-

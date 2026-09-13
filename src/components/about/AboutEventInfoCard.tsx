@@ -1,7 +1,6 @@
 import EventInfo from "@/components/EventInfo";
 import Link from "next/link";
 
-
 export default function AboutEventInfoCard() {
   return (
     <div className="card bg-base-100 mb-8">
@@ -24,7 +23,6 @@ export default function AboutEventInfoCard() {
             </ul>
           </div>
         </div>
-
       </div>
     </div>
   );

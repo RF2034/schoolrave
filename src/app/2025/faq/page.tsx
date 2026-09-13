@@ -22,4 +22,3 @@ export default function FAQ2025() {
     </div>
   );
 }
-

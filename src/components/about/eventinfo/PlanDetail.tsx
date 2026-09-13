@@ -20,7 +20,10 @@ export default function PlanDetail({ plan }: PlanDetailProps) {
         <div className="mb-2 text-base-content/70">主催：{plan.organizers}</div>
         <div className="flex flex-wrap gap-2 mb-4">
           {plan.genres.map((genre) => (
-            <span key={genre} className="badge badge-outline badge-primary text-xs px-2 py-1">
+            <span
+              key={genre}
+              className="badge badge-outline badge-primary text-xs px-2 py-1"
+            >
               {genre}
             </span>
           ))}

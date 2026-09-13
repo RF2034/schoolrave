@@ -6,7 +6,10 @@ export default function HeroSection2026() {
   const leadLines = SITE_2026.hero.lead.split("\n");
 
   return (
-    <section id="top" className="hero-2026 relative min-h-[min(100svh,920px)] overflow-hidden">
+    <section
+      id="top"
+      className="hero-2026 relative min-h-[min(100svh,920px)] overflow-hidden"
+    >
       <HeroSlideshow2026
         images={SITE_2026.hero.slideImages}
         intervalMs={SITE_2026.hero.slideIntervalMs}
