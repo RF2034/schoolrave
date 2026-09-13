@@ -5,7 +5,7 @@ export default function Header() {
     { href: "/2025", label: "ホーム", icon: "🏠" },
     { href: "/2025/about", label: "概要", icon: "📋" },
     { href: "/2025/last-year", label: "昨年の様子", icon: "📸" },
-    { href: "/2025/faq", label: "FAQ", icon: "❓" }
+    { href: "/2025/faq", label: "FAQ", icon: "❓" },
   ];
 
   return (
@@ -51,13 +51,14 @@ export default function Header() {
         <ul className="menu menu-horizontal px-1 text-base">
           {navItems.map((item) => (
             <li key={item.href}>
-              <Link href={item.href} className="px-4">{item.label}</Link>
+              <Link href={item.href} className="px-4">
+                {item.label}
+              </Link>
             </li>
           ))}
         </ul>
       </div>
-      <div className="navbar-end">
-      </div>
+      <div className="navbar-end"></div>
     </header>
   );
 }

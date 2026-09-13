@@ -24,4 +24,3 @@ const VoicesSection = () => (
 export default VoicesSection;
 import { voices } from "@/constants/voices";
 import ReactMarkdown from "react-markdown";
-

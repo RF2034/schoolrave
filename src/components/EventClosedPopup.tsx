@@ -1,5 +1,3 @@
-
-
 "use client";
 import { useEffect, useRef, useState } from "react";
 
@@ -8,22 +6,22 @@ export default function EventClosedPopup() {
   const [visible, setVisible] = useState(true);
   const popupRef = useRef<HTMLDivElement>(null);
 
-  // フェードアウト時に非表示にする
+  // 閉じたあとにフェード完了で DOM から外す（開くのは初回のみなので visible を戻さない）
   useEffect(() => {
-    if (!open) {
-      const timer = setTimeout(() => {
-        setVisible(false);
-      }, 250); // アニメーション時間と合わせる
-      return () => clearTimeout(timer);
-    } else {
-      setVisible(true);
-    }
+    if (open) return;
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, 250);
+    return () => clearTimeout(timer);
   }, [open]);
 
   // 外側クリックで閉じる
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
       }
     }
@@ -38,7 +36,7 @@ export default function EventClosedPopup() {
   if (!visible) return null;
   return (
     <div
-  className={`fixed inset-0 z-50 flex items-center justify-center bg-gray-500/30 transition-opacity duration-250 ${open ? "opacity-100" : "opacity-0"}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-gray-500/30 transition-opacity duration-250 ${open ? "opacity-100" : "opacity-0"}`}
     >
       <div
         ref={popupRef}
@@ -53,7 +51,9 @@ export default function EventClosedPopup() {
         >
           ×
         </button>
-        <p className="text-lg font-semibold mb-2">2025年のガッコウレイヴは無事閉校しました！</p>
+        <p className="text-lg font-semibold mb-2">
+          2025年のガッコウレイヴは無事閉校しました！
+        </p>
         <p>また来年お会いしましょう！</p>
       </div>
     </div>

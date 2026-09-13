@@ -26,27 +26,34 @@ export default function HeroSlideshow2026({ images, intervalMs }: Props) {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const imagesRef = useRef(images);
-  imagesRef.current = images;
-
   const stateRef = useRef({
     activeLayer: 0 as 0 | 1,
     isTransitioning: false,
   });
-  stateRef.current.activeLayer = activeLayer;
-  stateRef.current.isTransitioning = isTransitioning;
-
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
 
   useEffect(() => {
+    imagesRef.current = images;
+  }, [images]);
+
+  useEffect(() => {
+    stateRef.current.activeLayer = activeLayer;
+    stateRef.current.isTransitioning = isTransitioning;
+  }, [activeLayer, isTransitioning]);
+
+  useEffect(() => {
     if (images.length === 0) return;
 
     let cancelled = false;
+    // ponytail: images 差し替え時にスライド状態を初期化。key リマウントに上げるならこの塊ごと消せる
+    /* eslint-disable react-hooks/set-state-in-effect -- reset slideshow when images prop changes */
     setIsReady(false);
     setActiveLayer(0);
     setLayerIndices([0, Math.min(1, images.length - 1)]);
     setIsTransitioning(false);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     void (async () => {
       if (images.length === 1) {
@@ -64,10 +71,7 @@ export default function HeroSlideshow2026({ images, intervalMs }: Props) {
       });
 
       try {
-        await Promise.all([
-          preloadImage(images[0]!),
-          preloadImage(images[1]!),
-        ]);
+        await Promise.all([preloadImage(images[0]!), preloadImage(images[1]!)]);
       } catch {
         /* continue */
       }

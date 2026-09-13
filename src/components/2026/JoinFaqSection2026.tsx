@@ -22,13 +22,17 @@ export default function JoinFaqSection2026() {
                   <dt className="text-xs tracking-[0.2em] text-[var(--2026-muted)]">
                     定員
                   </dt>
-                  <dd className="mt-2 text-2xl font-medium">{SITE_2026.joinFaq.capacity}</dd>
+                  <dd className="mt-2 text-2xl font-medium">
+                    {SITE_2026.joinFaq.capacity}
+                  </dd>
                 </div>
                 <div>
                   <dt className="text-xs tracking-[0.2em] text-[var(--2026-muted)]">
                     参加方法
                   </dt>
-                  <dd className="mt-2 text-2xl font-medium">{SITE_2026.joinFaq.method}</dd>
+                  <dd className="mt-2 text-2xl font-medium">
+                    {SITE_2026.joinFaq.method}
+                  </dd>
                 </div>
               </dl>
               <StampCta2026 />

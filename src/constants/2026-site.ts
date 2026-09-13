@@ -22,8 +22,7 @@ export const SITE_2026 = {
     tagline: "学校が3日間だけの遊び場に",
     titleJa: "ガッコウレイヴ",
     eventDate: "2026/11/21-23(土日祝)",
-    lead:
-      "DJも、フードも、ワークショップも\nやりたいことを持ち寄る3日間。",
+    lead: "DJも、フードも、ワークショップも\nやりたいことを持ち寄る3日間。",
     slideIntervalMs: 4000,
     /** 背景スライド（プレースホルダー: 同一CDNを利用。後から差し替え可） */
     slideImages: [
@@ -73,7 +72,7 @@ export const SITE_2026 = {
         title: "CRAFT BEER",
         description: "OCTONE Brewingのクラフトビール",
         icon: "ri-beer-line",
-      }
+      },
     ],
   },
   venue: {
@@ -111,10 +110,7 @@ export const SITE_2026 = {
       ],
     },
     food: {
-      lines: [
-        "朝昼晩の食事あり",
-        "元学校調理師が担当",
-      ],
+      lines: ["朝昼晩の食事あり", "元学校調理師が担当"],
     },
   },
   /** ヘッダーから昨年（2025年）開催サイトへ */
@@ -125,7 +121,10 @@ export const SITE_2026 = {
   },
   access: {
     titleEn: "ACCESS",
-    lines: ["チャーターバス：都内から運行予定（昨年は新宿駅付近発着）", "自家用車：駐車場あり"],
+    lines: [
+      "チャーターバス：都内から運行予定（昨年は新宿駅付近発着）",
+      "自家用車：駐車場あり",
+    ],
     /** Google Maps 埋め込み（プレースホルダー: 会場付近） */
     mapEmbedUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d814.9901812800305!2d138.8967393246207!3d36.72750853553635!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601e12bef89c47d7%3A0x97d48fd46d380ed4!2z5rOK44G-44KM44KL5a2m5qChIOOBleOCi-WwjyDvvIjnpL7vvInnjL_jg7bkuqzlsI_lrabmoKEg44K544Od44O844OE44Ki44Kr44OH44Of44O8!5e0!3m2!1sja!2sjp!4v1749378723951!5m2!1sja!2sjp",
@@ -138,12 +137,7 @@ export const SITE_2026 = {
     lastYearReference: "2025年は35名参加で、お一人あたり約45,000円でした。",
     note: "イベント開催費用を参加者で割り勘する形式です",
     includesLabel: "参加費に含まれるもの",
-    includedItems: [
-      "食費",
-      "東京からのチャーターバス費",
-      "機材費",
-      "宿泊費",
-    ],
+    includedItems: ["食費", "東京からのチャーターバス費", "機材費", "宿泊費"],
     includesNote: "などが参加費に含まれます",
     cancellationFees: [
       "3ケ月前～：10％",
@@ -189,8 +183,7 @@ export const SITE_2026 = {
   cta: {
     label: "参加申し込み",
     /** Googleフォーム URL（プレースホルダー: 確定後に差し替え） */
-    registrationUrl:
-      "https://forms.gle/CbXVtuQmNkR5bR117",
+    registrationUrl: "https://forms.gle/CbXVtuQmNkR5bR117",
   },
   footer: {
     copyright: "© Gakkou Rave",

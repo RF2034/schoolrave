@@ -19,14 +19,23 @@ export default function AboutPlansCard() {
               onClick={() => setSelectedPlan(plan)}
               tabIndex={0}
               role="button"
-              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setSelectedPlan(plan); }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") setSelectedPlan(plan);
+              }}
             >
               <div className="card-body">
-                <h3 className="card-title text-lg font-bold mb-2">{plan.title}</h3>
-                <div className="mb-2 text-sm text-base-content/70">主催：{plan.organizers}</div>
+                <h3 className="card-title text-lg font-bold mb-2">
+                  {plan.title}
+                </h3>
+                <div className="mb-2 text-sm text-base-content/70">
+                  主催：{plan.organizers}
+                </div>
                 <div className="flex flex-wrap gap-2 mb-1">
                   {plan.genres.map((genre) => (
-                    <span key={genre} className="badge badge-outline badge-primary text-xs px-2 py-1">
+                    <span
+                      key={genre}
+                      className="badge badge-outline badge-primary text-xs px-2 py-1"
+                    >
                       {genre}
                     </span>
                   ))}
@@ -45,7 +54,7 @@ export default function AboutPlansCard() {
         >
           <div
             className="bg-base-100 rounded-lg max-w-lg w-full p-6 relative animate-fade-in"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <button
               className="absolute top-2 right-2 btn btn-sm btn-circle btn-ghost"
@@ -55,10 +64,15 @@ export default function AboutPlansCard() {
               ×
             </button>
             <h3 className="text-xl font-bold mb-2">{selectedPlan.title}</h3>
-            <div className="mb-2 text-sm text-base-content/70">主催：{selectedPlan.organizers}</div>
+            <div className="mb-2 text-sm text-base-content/70">
+              主催：{selectedPlan.organizers}
+            </div>
             <div className="flex flex-wrap gap-2 mb-3">
               {selectedPlan.genres.map((genre) => (
-                <span key={genre} className="badge badge-outline badge-primary text-xs px-2 py-1">
+                <span
+                  key={genre}
+                  className="badge badge-outline badge-primary text-xs px-2 py-1"
+                >
                   {genre}
                 </span>
               ))}

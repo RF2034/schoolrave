@@ -10,7 +10,10 @@ function dismissLoadingGate(animate: boolean) {
   const root = document.documentElement;
   const fallback = document.getElementById("loading-gate-2026-fallback");
 
-  if (!fallback || fallback.classList.contains("loading-gate-2026--dismissed")) {
+  if (
+    !fallback ||
+    fallback.classList.contains("loading-gate-2026--dismissed")
+  ) {
     root.classList.remove("loading-gate-pending");
     root.classList.remove("loading-gate-exiting");
     return;

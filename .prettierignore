@@ -1,0 +1,8 @@
+.next
+out
+node_modules
+.open-next
+package-lock.json
+.agents
+docs
+.husky/_

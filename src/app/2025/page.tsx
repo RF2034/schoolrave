@@ -32,4 +32,3 @@ export default function Home2025() {
     </div>
   );
 }
-
