@@ -35,14 +35,31 @@ export default function ParticipantsSection() {
     ? currentTier.nextTier - currentParticipants
     : 0;
 
-  // URLからSNSプラットフォームを判定する関数
+  // URL のホスト名から SNS を判定する（部分文字列一致はしない）
   const getSocialPlatform = (
     url: string,
   ): "twitter" | "instagram" | "unknown" => {
-    if (url.includes("twitter.com") || url.includes("x.com")) {
-      return "twitter";
-    } else if (url.includes("instagram.com")) {
-      return "instagram";
+    try {
+      const host = new URL(url).hostname.toLowerCase();
+      if (
+        host === "twitter.com" ||
+        host === "www.twitter.com" ||
+        host === "x.com" ||
+        host === "www.x.com" ||
+        host.endsWith(".twitter.com") ||
+        host.endsWith(".x.com")
+      ) {
+        return "twitter";
+      }
+      if (
+        host === "instagram.com" ||
+        host === "www.instagram.com" ||
+        host.endsWith(".instagram.com")
+      ) {
+        return "instagram";
+      }
+    } catch {
+      return "unknown";
     }
     return "unknown";
   };
