@@ -20,6 +20,7 @@
     "react-markdown": "^10.1.0"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "file:scripts/pages-next-on-pages-shim",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.1.8",
     "@types/node": "^20",
@@ -31,5 +32,8 @@
     "tailwindcss": "^4.0.0",
     "typescript": "^5",
     "wrangler": "^4.131.1"
+  },
+  "overrides": {
+    "@cloudflare/next-on-pages": "file:scripts/pages-next-on-pages-shim"
   }
 }
