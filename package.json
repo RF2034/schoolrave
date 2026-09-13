@@ -3,24 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "^18.18.0 || ^19.8.0 || >=20.0.0",
+    "node": ">=20.9.0",
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@twemoji/api": "^16.0.1",
-    "googleapis": "^150.0.1",
-    "next": "^15.5.7",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "next": "^16.3.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "react-markdown": "^10.1.0"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "file:scripts/pages-next-on-pages-shim",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.1.8",
     "@types/node": "^20",
@@ -28,8 +28,12 @@
     "@types/react-dom": "^19",
     "daisyui": "^5.0.43",
     "eslint": "^9",
-    "eslint-config-next": "^15.5.7",
+    "eslint-config-next": "^16.3.5",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.131.1"
+  },
+  "overrides": {
+    "@cloudflare/next-on-pages": "file:scripts/pages-next-on-pages-shim"
   }
 }
