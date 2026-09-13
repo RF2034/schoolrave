@@ -119,6 +119,12 @@ export const SITE_2026 = {
     navLabel: "2025",
     label: "2025年開催サイト（昨年）",
   },
+  /** ヘッダーから参加者向け準備ポータルへ（Cloudflare Access 保護） */
+  portal: {
+    href: "/portal",
+    navLabel: "PORTAL",
+    label: "参加者向け準備ポータル",
+  },
   access: {
     titleEn: "ACCESS",
     lines: [

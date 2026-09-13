@@ -83,6 +83,14 @@ export default function SiteHeader2026() {
               ))}
               <li>
                 <Link
+                  href={SITE_2026.portal.href}
+                  title={SITE_2026.portal.label}
+                >
+                  {SITE_2026.portal.navLabel}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href={SITE_2026.lastYear.siteHref}
                   title={SITE_2026.lastYear.label}
                 >
@@ -132,6 +140,15 @@ export default function SiteHeader2026() {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link
+                  href={SITE_2026.portal.href}
+                  title={SITE_2026.portal.label}
+                  onClick={() => setOpen(false)}
+                >
+                  {SITE_2026.portal.navLabel}
+                </Link>
+              </li>
               <li>
                 <Link
                   href={SITE_2026.lastYear.siteHref}
