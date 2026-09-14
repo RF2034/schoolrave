@@ -12,6 +12,7 @@ export default tseslint.config(
       ".next/**",
       ".vercel/**",
       "node_modules/**",
+      "scripts/pages-next-on-pages-shim/**",
     ],
   },
   eslint.configs.recommended,
