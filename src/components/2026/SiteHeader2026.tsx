@@ -1,7 +1,6 @@
 "use client";
 
 import { SITE_2026 } from "@/constants/2026-site";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const SCROLL_THRESHOLD = 24;
@@ -65,12 +64,12 @@ export default function SiteHeader2026() {
       {/* PC: 固定ヘッダー（モバイルでは非表示・レイアウト占有なし） */}
       <header className={desktopNavClass}>
         <div className="site-header-2026__inner">
-          <Link
+          <a
             href="/2026#top"
             className="site-header-2026__logo font-display-en"
           >
             {SITE_2026.hero.titleJa}
-          </Link>
+          </a>
           <nav
             className="site-header-2026__nav font-display-en"
             aria-label="ページ内"
@@ -82,20 +81,17 @@ export default function SiteHeader2026() {
                 </li>
               ))}
               <li>
-                <Link
-                  href={SITE_2026.portal.href}
-                  title={SITE_2026.portal.label}
-                >
+                <a href={SITE_2026.portal.href} title={SITE_2026.portal.label}>
                   {SITE_2026.portal.navLabel}
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
+                <a
                   href={SITE_2026.lastYear.siteHref}
                   title={SITE_2026.lastYear.label}
                 >
                   {SITE_2026.lastYear.navLabel}
-                </Link>
+                </a>
               </li>
             </ul>
           </nav>
@@ -105,12 +101,12 @@ export default function SiteHeader2026() {
       {/* モバイル: スクロールアップで一時表示 */}
       <header className={mobileHeaderClass}>
         <div className="site-header-2026__inner site-header-2026__inner--mobile">
-          <Link
+          <a
             href="/2026#top"
             className="site-header-2026__logo font-display-en"
           >
             {SITE_2026.hero.titleJa}
-          </Link>
+          </a>
           <button
             type="button"
             className="site-header-2026__toggle"
@@ -141,22 +137,22 @@ export default function SiteHeader2026() {
                 </li>
               ))}
               <li>
-                <Link
+                <a
                   href={SITE_2026.portal.href}
                   title={SITE_2026.portal.label}
                   onClick={() => setOpen(false)}
                 >
                   {SITE_2026.portal.navLabel}
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
+                <a
                   href={SITE_2026.lastYear.siteHref}
                   title={SITE_2026.lastYear.label}
                   onClick={() => setOpen(false)}
                 >
                   {SITE_2026.lastYear.navLabel}
-                </Link>
+                </a>
               </li>
             </ul>
           </nav>

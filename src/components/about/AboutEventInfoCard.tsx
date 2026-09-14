@@ -1,5 +1,4 @@
 import EventInfo from "@/components/EventInfo";
-import Link from "next/link";
 
 export default function AboutEventInfoCard() {
   return (
@@ -9,9 +8,9 @@ export default function AboutEventInfoCard() {
         <EventInfo />
         <h3 className="text-lg font-semibold">🚌東京からの無料バスあり🚌</h3>
         <div className="">
-          <Link href="/#participants" className="btn btn-outline">
+          <a href="/#participants" className="btn btn-outline">
             現在の料金はこちら
-          </Link>
+          </a>
           <div className="mt-2 text-sm">
             <div>キャンセル料</div>
             <ul className="list-disc list-inside">

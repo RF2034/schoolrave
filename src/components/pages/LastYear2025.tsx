@@ -2,13 +2,6 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import LastYearTimetableCard from "@/components/lastyear/LastYearTimetableCard";
 import PhotoGallery from "@/components/lastyear/PhotoGallery";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "昨年の様子 - ガッコウレイヴ2025",
-  description:
-    "ガッコウレイヴ2024の開催レポート、参加者の感想、写真ギャラリーをご覧いただけます。",
-};
 
 export default function LastYear2025() {
   return (

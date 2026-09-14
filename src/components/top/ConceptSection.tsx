@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 const ConceptSection = () => (
   <section className="py-12 md:py-16 lg:py-20 px-4 bg-base-100">
     <div className="container mx-auto max-w-4xl">
@@ -57,9 +55,9 @@ const ConceptSection = () => (
         </div>
       </div>
       <div className="mt-12 flex justify-center">
-        <Link href="/2025/about" className="btn btn-outline btn-lg">
+        <a href="/2025/about" className="btn btn-outline btn-lg">
           概要を見る
-        </Link>
+        </a>
       </div>
     </div>
   </section>

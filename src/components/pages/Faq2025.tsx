@@ -2,12 +2,6 @@ import ContactInfo from "@/components/faq/ContactInfo";
 import FaqList from "@/components/faq/FaqList";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "よくある質問 - ガッコウレイヴ2025",
-  description: "ガッコウレイヴ2025に関するよくある質問と回答をまとめています。",
-};
 
 export default function FAQ2025() {
   return (

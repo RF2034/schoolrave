@@ -1,0 +1,23 @@
+---
+import PlanDetail from "@/components/about/eventinfo/PlanDetail";
+import { plans } from "@/components/about/eventinfo/plans";
+import Base from "@/layouts/Base.astro";
+
+export function getStaticPaths() {
+  return plans.map((plan) => ({
+    params: { id: plan.id },
+    props: { plan },
+  }));
+}
+
+const { plan } = Astro.props;
+---
+
+<Base title={`${plan.title} - ガッコウレイヴ`}>
+  <div class="min-h-screen bg-base-200 pt-16 pb-12">
+    <div class="container mx-auto px-4 py-8">
+      <a href="/2025/about" class="btn btn-ghost mb-6">← 企画一覧に戻る</a>
+      <PlanDetail plan={plan} />
+    </div>
+  </div>
+</Base>

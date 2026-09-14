@@ -3,8 +3,13 @@
   themes: winter --default;
 }
 
+:root {
+  --font-biz-udp-gothic: "BIZ UDPGothic", sans-serif;
+  --font-2026-display: "Space Grotesk", sans-serif;
+}
+
 @theme inline {
-  --font-biz-udp-: var(--font-biz-udp-);
+  --font-sans: var(--font-biz-udp-gothic);
 }
 
 /* モバイル向けカスタムスタイル */

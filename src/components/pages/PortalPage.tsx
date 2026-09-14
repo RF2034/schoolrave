@@ -1,11 +1,4 @@
-import type { Metadata } from "next";
 import type { ReactNode } from "react";
-
-export const metadata: Metadata = {
-  title: "準備ポータル | ガッコウレイヴ",
-  description: "参加スタッフ向けの準備用ポータルです。",
-  robots: { index: false, follow: false },
-};
 
 const DRIVE_URL =
   "https://drive.google.com/drive/folders/1QG-uD__KaucfX4I0_MiiFZ0gjZcaMhik?usp=drive_link";

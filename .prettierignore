@@ -1,4 +1,6 @@
 .next
+.astro
+dist
 out
 node_modules
 .open-next

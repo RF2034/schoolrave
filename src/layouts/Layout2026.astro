@@ -1,0 +1,46 @@
+---
+import { SITE_2026 } from "@/constants/2026-site";
+import Base from "./Base.astro";
+---
+
+<Base
+  title={SITE_2026.meta.title}
+  description={SITE_2026.meta.description}
+  canonical="/2026"
+  ogTitle={SITE_2026.meta.title}
+  ogDescription={SITE_2026.meta.description}
+  ogUrl="https://gakkou-rave.com/2026"
+  ogSiteName="ガッコウレイヴ2026"
+>
+  <div class="site-2026">
+    <script is:inline>
+      (function () {
+        try {
+          if (!sessionStorage.getItem("gakkorave2026-loading-done")) {
+            document.documentElement.classList.add("loading-gate-pending");
+          }
+        } catch {
+          /* ignore */
+        }
+      })();
+    </script>
+    <div
+      id="loading-gate-2026-fallback"
+      class="loading-gate-2026"
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <div class="loading-gate-2026__inner">
+        <p
+          class="font-hero-title loading-gate-2026__chalk loading-gate-2026__chalk--main"
+        >
+          {SITE_2026.loading.chalkTitle}
+        </p>
+        <p class="loading-gate-2026__chalk loading-gate-2026__chalk--sub">
+          {SITE_2026.loading.subtitle}
+        </p>
+      </div>
+    </div>
+    <slot />
+  </div>
+</Base>
