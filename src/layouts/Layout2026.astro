@@ -13,15 +13,77 @@ import Base from "./Base.astro";
   ogSiteName="ガッコウレイヴ2026"
 >
   <div class="site-2026">
+    {
+      /* React island のハイドレーションに依存せずゲートを閉じる（dev の vite 不整合でも固着しない） */
+    }
     <script is:inline>
       (function () {
+        const KEY = "gakkorave2026-loading-done";
+        const LOADING_MS = 2200;
+        const EXIT_MS = 1000;
+
+        function dismiss(animate) {
+          const root = document.documentElement;
+          const fallback = document.getElementById(
+            "loading-gate-2026-fallback",
+          );
+          if (
+            !fallback ||
+            fallback.classList.contains("loading-gate-2026--dismissed")
+          ) {
+            root.classList.remove("loading-gate-pending");
+            root.classList.remove("loading-gate-exiting");
+            return;
+          }
+          const finish = function () {
+            fallback.classList.add("loading-gate-2026--dismissed");
+            fallback.classList.remove("loading-gate-2026--exiting");
+            root.classList.remove("loading-gate-exiting");
+          };
+          if (!animate) {
+            root.classList.remove("loading-gate-pending");
+            finish();
+            return;
+          }
+          let done = false;
+          const complete = function () {
+            if (done) return;
+            done = true;
+            finish();
+          };
+          const onEnd = function (e) {
+            if (e.target !== fallback || e.propertyName !== "opacity") return;
+            fallback.removeEventListener("transitionend", onEnd);
+            complete();
+          };
+          fallback.addEventListener("transitionend", onEnd);
+          root.classList.add("loading-gate-exiting");
+          root.classList.remove("loading-gate-pending");
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              fallback.classList.add("loading-gate-2026--exiting");
+            });
+          });
+          setTimeout(complete, EXIT_MS + 120);
+        }
+
         try {
-          if (!sessionStorage.getItem("gakkorave2026-loading-done")) {
-            document.documentElement.classList.add("loading-gate-pending");
+          if (sessionStorage.getItem(KEY)) {
+            return;
           }
         } catch {
           /* ignore */
         }
+
+        document.documentElement.classList.add("loading-gate-pending");
+        setTimeout(function () {
+          try {
+            sessionStorage.setItem(KEY, "1");
+          } catch {
+            /* ignore */
+          }
+          dismiss(true);
+        }, LOADING_MS);
       })();
     </script>
     <div
