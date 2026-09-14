@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { SITE_2026 } from "@/constants/2026-site";
 import RevealOnScroll from "./RevealOnScroll";
 
@@ -29,12 +28,10 @@ export default function VenueSection2026() {
                 key={item.src}
                 className="relative aspect-[4/3] overflow-hidden rounded-sm border border-[var(--2026-rule)] bg-[var(--2026-surface)]"
               >
-                <Image
+                <img
                   src={item.src}
                   alt={item.alt}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>
             ))}

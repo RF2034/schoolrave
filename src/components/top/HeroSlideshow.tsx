@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const images = [
@@ -49,12 +48,9 @@ const HeroSlideshow = () => {
       }}
     >
       {/* 現在の画像 */}
-      <Image
+      <img
         src={images[currentIndex]}
         alt=""
-        fill
-        priority
-        sizes="100vw"
         className="!w-full !h-full !object-cover !absolute !inset-0"
         style={{
           opacity: 1,
@@ -62,16 +58,13 @@ const HeroSlideshow = () => {
           pointerEvents: "none",
         }}
         draggable={false}
-        unoptimized
       />
 
       {/* 次の画像（トランジション中のみ表示） */}
       {isTransitioning && (
-        <Image
+        <img
           src={images[nextIndex]}
           alt=""
-          fill
-          sizes="100vw"
           className="!w-full !h-full !object-cover !absolute !inset-0"
           style={{
             opacity: 1,
@@ -79,7 +72,6 @@ const HeroSlideshow = () => {
             pointerEvents: "none",
           }}
           draggable={false}
-          unoptimized
         />
       )}
     </div>

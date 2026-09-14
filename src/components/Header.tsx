@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export default function Header() {
   const navItems = [
     { href: "/2025", label: "ホーム", icon: "🏠" },
@@ -39,9 +37,9 @@ export default function Header() {
           >
             {navItems.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="text-base py-3">
+                <a href={item.href} className="text-base py-3">
                   {item.icon} {item.label}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -51,9 +49,9 @@ export default function Header() {
         <ul className="menu menu-horizontal px-1 text-base">
           {navItems.map((item) => (
             <li key={item.href}>
-              <Link href={item.href} className="px-4">
+              <a href={item.href} className="px-4">
                 {item.label}
-              </Link>
+              </a>
             </li>
           ))}
         </ul>

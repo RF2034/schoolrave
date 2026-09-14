@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const TRANSITION_MS = 500;
@@ -48,12 +47,10 @@ export default function HeroSlideshow2026({ images, intervalMs }: Props) {
 
     let cancelled = false;
     // ponytail: images 差し替え時にスライド状態を初期化。key リマウントに上げるならこの塊ごと消せる
-    /* eslint-disable react-hooks/set-state-in-effect -- reset slideshow when images prop changes */
     setIsReady(false);
     setActiveLayer(0);
     setLayerIndices([0, Math.min(1, images.length - 1)]);
     setIsTransitioning(false);
-    /* eslint-enable react-hooks/set-state-in-effect */
 
     void (async () => {
       if (images.length === 1) {
@@ -164,15 +161,11 @@ export default function HeroSlideshow2026({ images, intervalMs }: Props) {
               : 1;
 
         return (
-          <Image
+          <img
             key={layer}
             src={src}
             alt=""
-            fill
-            priority={layer === 0 && index === 0}
-            sizes="100vw"
-            unoptimized
-            className="object-cover transition-opacity duration-500 ease-in-out"
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-in-out"
             style={{
               opacity: targetOpacity,
               zIndex,

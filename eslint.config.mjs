@@ -1,13 +1,21 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import eslint from "@eslint/js";
 import prettier from "eslint-config-prettier/flat";
+import astro from "eslint-plugin-astro";
+import tseslint from "typescript-eslint";
 
-const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
+export default tseslint.config(
+  {
+    ignores: [
+      "dist/**",
+      ".astro/**",
+      "out/**",
+      ".next/**",
+      ".vercel/**",
+      "node_modules/**",
+    ],
+  },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
+  ...astro.configs.recommended,
   prettier,
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
-]);
-
-export default eslintConfig;
+);

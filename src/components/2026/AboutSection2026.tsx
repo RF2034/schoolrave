@@ -1,5 +1,4 @@
 import { SITE_2026 } from "@/constants/2026-site";
-import Image from "next/image";
 import RevealOnScroll from "./RevealOnScroll";
 
 export default function AboutSection2026() {
@@ -32,12 +31,10 @@ export default function AboutSection2026() {
               ))}
             </div>
             <div className="relative aspect-[4/3] overflow-hidden rounded-sm border border-[var(--2026-rule)] bg-[var(--2026-surface)] shadow-[2px_3px_0_var(--2026-shadow)]">
-              <Image
+              <img
                 src={SITE_2026.about.imageSrc}
                 alt={SITE_2026.about.imageAlt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="absolute inset-0 h-full w-full object-cover"
               />
             </div>
           </div>

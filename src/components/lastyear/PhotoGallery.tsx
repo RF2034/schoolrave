@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const PhotoGallery = () => {
@@ -55,17 +54,13 @@ const PhotoGallery = () => {
             ) : (
               <div className="relative w-full aspect-[16/9] flex justify-center items-center bg-base-200 overflow-hidden">
                 {images.map((src, idx) => (
-                  <Image
+                  <img
                     key={src}
                     src={src}
                     alt={`フォト${idx + 1}`}
                     className={`absolute left-0 top-0 w-full h-full object-cover transition-opacity duration-150 ${current === idx ? "opacity-100 z-10" : "opacity-0 z-0"}`}
                     draggable={false}
                     style={{ pointerEvents: current === idx ? "auto" : "none" }}
-                    fill
-                    priority={idx === current}
-                    sizes="(max-width: 640px) 100vw, 640px"
-                    unoptimized
                   />
                 ))}
               </div>
