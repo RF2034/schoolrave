@@ -91,16 +91,16 @@ export default function PortalPage() {
           <h2 id="news-heading" className="portal__section-title">
             お知らせ
           </h2>
-          <p className="portal__notice-date">更新日：2026/09/14</p>
+          <p className="portal__notice-date">更新日：2026/10/01</p>
           <p className="portal__notice-title">次回の定例ミーティング</p>
           <dl className="portal__dl">
             <dt>日時</dt>
-            <dd>2026年10月1日（木） 21:00〜</dd>
+            <dd>2026年11月5日（木） 21:00〜</dd>
             <dt>場所 / 形式</dt>
             <dd>オンライン / Discordサーバー内 #大会議室</dd>
             <dt>議題</dt>
             <dd>
-              進捗共有。目標は「10月までにできる限りタスクを片付けよう！」
+              進捗共有。目標は「開催日まであと少しなので報告のみくらいに！」
             </dd>
           </dl>
         </section>
