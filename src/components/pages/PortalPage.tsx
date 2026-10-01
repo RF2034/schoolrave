@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import venue1f from "@/assets/portal/venue-1f.png";
+import venue2f from "@/assets/portal/venue-2f.png";
 
 const DRIVE_URL =
   "https://drive.google.com/drive/folders/1QG-uD__KaucfX4I0_MiiFZ0gjZcaMhik?usp=drive_link";
@@ -36,6 +38,23 @@ const SUBMISSIONS = [
     deadline: "11/1（日）24:00",
     href: "https://forms.gle/pmaudE5uYesk5wM18",
     linkLabel: "Googleフォーム",
+  },
+] as const;
+
+const FLOOR_PLANS = [
+  {
+    src: venue1f.src,
+    width: venue1f.width,
+    height: venue1f.height,
+    title: "1階",
+    alt: "1階の見取り図。図工室、DJブースB、理科室、食事部屋、家庭科室、調理場、BBQ棟、多目的ホール、DJブースA、保健室、職員室、校長室、玄関、女性用の教室、プール、屋外グラウンド。",
+  },
+  {
+    src: venue2f.src,
+    width: venue2f.width,
+    height: venue2f.height,
+    title: "2階",
+    alt: "2階の見取り図。図書室、音楽室、視聴覚室、バス運転手用・エージさんと釼さん用・男性用の荷物置き兼寝室。",
   },
 ] as const;
 
@@ -151,6 +170,32 @@ export default function PortalPage() {
           <p className="portal__note portal__note--tight">
             リンクは準備でき次第掲載します。
           </p>
+        </section>
+
+        <section
+          id="venue"
+          className="portal__section"
+          aria-labelledby="venue-heading"
+        >
+          <h2 id="venue-heading" className="portal__section-title">
+            会場見取り図
+          </h2>
+          {FLOOR_PLANS.map((floor) => (
+            <figure className="portal__map" key={floor.title}>
+              <figcaption>{floor.title}</figcaption>
+              <a href={floor.src} rel="noopener noreferrer" target="_blank">
+                <img
+                  src={floor.src}
+                  width={floor.width}
+                  height={floor.height}
+                  alt={floor.alt}
+                />
+                <span className="portal__sr-only">
+                  原寸を新しいタブで開きます
+                </span>
+              </a>
+            </figure>
+          ))}
         </section>
 
         <section
