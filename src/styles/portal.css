@@ -212,6 +212,32 @@
   font-weight: 700;
 }
 
+.portal__map {
+  margin: 0;
+}
+
+.portal__map + .portal__map {
+  margin-top: 1.25rem;
+}
+
+.portal__map figcaption {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+}
+
+.portal__map a {
+  display: block;
+  text-decoration: none;
+}
+
+.portal__map img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--portal-border);
+  background: #fff;
+}
+
 .portal__ext-icon {
   display: inline-block;
   margin-left: 0.2em;
