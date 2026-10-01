@@ -20,22 +20,16 @@ const SUBMISSIONS = [
     linkLabel: "Googleフォーム",
   },
   {
-    title: "ガッコウレイヴの楽しみ方についてのアンケート",
-    deadline: "9/20（日）24:00",
-    href: "https://forms.gle/nN7ZQn6fZFwALpYy8",
-    linkLabel: "Googleフォーム",
+    title: "ミニイベント主催・参加者 募集",
+    deadline: "11/1（日）24:00",
+    href: undefined,
+    linkLabel: "Discord「ガッコウレイヴ2026 ミニイベント告知・連絡用」",
   },
   {
-    title: "ターンテーブル使用希望者調査",
-    deadline: "9/27（日）24:00",
-    href: "https://forms.gle/GLyt5haxTzzdmUgt8",
-    linkLabel: "Googleフォーム",
-  },
-  {
-    title: "食べたいものアンケート",
-    deadline: "9月末",
-    href: "https://forms.gle/1Xp9jDFN5AUJCxhZ8",
-    linkLabel: "Googleフォーム",
+    title: "個人DJ ブース使用予約",
+    deadline: "11/1（日）24:00",
+    href: undefined,
+    linkLabel: "Discord「ガッコウレイヴ2026 DJブース事前予約・連絡質問用」",
   },
 ] as const;
 
@@ -124,13 +118,17 @@ export default function PortalPage() {
               </thead>
               <tbody>
                 {SUBMISSIONS.map((item) => (
-                  <tr key={item.href}>
+                  <tr key={item.title}>
                     <td data-label="内容">{item.title}</td>
                     <td data-label="締切">{item.deadline}</td>
                     <td data-label="入力先">
-                      <ExternalLink href={item.href}>
-                        {item.linkLabel}
-                      </ExternalLink>
+                      {item.href ? (
+                        <ExternalLink href={item.href}>
+                          {item.linkLabel}
+                        </ExternalLink>
+                      ) : (
+                        item.linkLabel
+                      )}
                     </td>
                   </tr>
                 ))}
