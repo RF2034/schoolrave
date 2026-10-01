@@ -22,14 +22,20 @@ const SUBMISSIONS = [
   {
     title: "ミニイベント主催・参加者 募集",
     deadline: "11/1（日）24:00",
-    href: undefined,
+    href: "https://discord.com/channels/805847994062340146/1553327285006770186",
     linkLabel: "Discord「ガッコウレイヴ2026 ミニイベント告知・連絡用」",
   },
   {
     title: "個人DJ ブース使用予約",
     deadline: "11/1（日）24:00",
-    href: undefined,
+    href: "https://discord.com/channels/805847994062340146/1553327015812141066",
     linkLabel: "Discord「ガッコウレイヴ2026 DJブース事前予約・連絡質問用」",
+  },
+  {
+    title: "食事好き嫌いアンケート",
+    deadline: "11/1（日）24:00",
+    href: "https://forms.gle/pmaudE5uYesk5wM18",
+    linkLabel: "Googleフォーム",
   },
 ] as const;
 
@@ -122,13 +128,9 @@ export default function PortalPage() {
                     <td data-label="内容">{item.title}</td>
                     <td data-label="締切">{item.deadline}</td>
                     <td data-label="入力先">
-                      {item.href ? (
-                        <ExternalLink href={item.href}>
-                          {item.linkLabel}
-                        </ExternalLink>
-                      ) : (
-                        item.linkLabel
-                      )}
+                      <ExternalLink href={item.href}>
+                        {item.linkLabel}
+                      </ExternalLink>
                     </td>
                   </tr>
                 ))}
