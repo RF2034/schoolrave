@@ -95,7 +95,7 @@ export default function PortalPage() {
           <p className="portal__notice-title">次回の定例ミーティング</p>
           <dl className="portal__dl">
             <dt>日時</dt>
-            <dd>2026年11月5日（木） 21:00〜</dd>
+            <dd>2026年10月15日（木） 21:00〜</dd>
             <dt>場所 / 形式</dt>
             <dd>オンライン / Discordサーバー内 #大会議室</dd>
             <dt>議題</dt>
