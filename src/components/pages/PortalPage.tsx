@@ -39,6 +39,18 @@ const SUBMISSIONS = [
     href: "https://forms.gle/pmaudE5uYesk5wM18",
     linkLabel: "Googleフォーム",
   },
+  {
+    title: "公式X 投稿ネタ募集（各班の進捗、過去回の思い出）",
+    deadline: "10/15（木）24:00",
+    href: "https://forms.gle/9LHuk31womRNRS3x8",
+    linkLabel: "Googleフォーム",
+  },
+  {
+    title: "ドリンクアンケート（飲酒量・飲みたいもの・カクテル・高い酒）",
+    deadline: "10/12（月）24:00",
+    href: "https://docs.google.com/forms/d/e/1FAIpQLSfpkHXIebDWLr-fZ6od3Se_HhHJEQAJoM-pOv5DMkFRp5AAZQ/viewform",
+    linkLabel: "Googleフォーム",
+  },
 ] as const;
 
 const FLOOR_PLANS = [
