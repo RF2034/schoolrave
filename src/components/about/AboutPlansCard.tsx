@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Plan, plans } from "./eventinfo/plans";
+import { type Plan, plans } from "./eventinfo/plans";
 
 export default function AboutPlansCard() {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);

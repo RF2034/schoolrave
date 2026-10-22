@@ -1,4 +1,4 @@
-import TimetableDay, { TimetableItem } from "@/components/TimetableDay";
+import TimetableDay, { type TimetableItem } from "@/components/TimetableDay";
 
 const day1: TimetableItem[] = [
   { time: "08:00", description: "チャーターバス出発 @新宿駅前" },
