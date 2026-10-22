@@ -11,8 +11,8 @@
 
 ## 前提条件
 
-- **Node.js**: 20.9 以上（推奨は **20.x または 22.x LTS**）
-- **npm**: 9 以上（または pnpm / yarn / bun）
+- **Node.js**: 22.23.4 以上（Astro 7 の要件。24 でも可）
+- **npm**: 9.6.5 以上（または pnpm / yarn / bun）
 
 `package.json` の `engines` フィールドと同じ範囲です。Volta や CI では Node のバージョンをここに合わせてください。
 
