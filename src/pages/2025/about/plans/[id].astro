@@ -3,9 +3,6 @@ import PlanDetail from "@/components/about/eventinfo/PlanDetail";
 import { plans } from "@/components/about/eventinfo/plans";
 import Base from "@/layouts/Base.astro";
 
-// 公開ページは静的生成する（EmDash の server 出力から切り離す）。
-export const prerender = true;
-
 export function getStaticPaths() {
   return plans.map((plan) => ({
     params: { id: plan.id },
