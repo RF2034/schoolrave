@@ -1,14 +1,58 @@
 ---
 import Base from "./Base.astro";
 import "@/styles/portal.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "参加スタッフ向けの準備用ポータルです。" } =
+  Astro.props;
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const NAV = [
+  { href: "/portal", label: "ホーム" },
+  { href: "/portal/diary", label: "交換日記" },
+  { href: "/portal/p/venue", label: "会場と持ち物" },
+];
+const isCurrent = (href: string) =>
+  href === path || (href !== "/portal" && path.startsWith(`${href}/`));
 ---
 
-<Base
-  title="準備ポータル | ガッコウレイヴ"
-  description="参加スタッフ向けの準備用ポータルです。"
-  robots="noindex, nofollow"
->
+<Base title={title} description={description} robots="noindex, nofollow">
   <div class="portal">
-    <slot />
+    <div class="portal__inner">
+      <header class="portal__header">
+        <p class="portal__label">参加スタッフ向け · 準備用</p>
+        <h1 class="portal__title">ガッコウレイヴ 準備ポータル</h1>
+        <p class="portal__meta">本開催：2026/11/21–23 · 群馬県 さる小</p>
+        <nav class="portal__nav" aria-label="ポータル内">
+          {
+            NAV.map((item) => (
+              <a
+                href={item.href}
+                aria-current={isCurrent(item.href) ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            ))
+          }
+          <a href="/_emdash/admin">管理画面</a>
+        </nav>
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer class="portal__footer">
+        <p>機密情報は掲載しません。必要な共有はドライブ経由で行います。</p>
+        <p>
+          画面デザインはデジタル庁デザインシステムウェブサイト
+          https://design.digital.go.jp/dads/ のコンテンツを加工して作成
+        </p>
+      </footer>
+    </div>
   </div>
 </Base>

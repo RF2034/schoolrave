@@ -1,0 +1,24 @@
+---
+import Portal from "@/layouts/Portal.astro";
+import { getEmDashEntry } from "emdash";
+import { PortableText } from "emdash/ui";
+
+const slug = Astro.params.slug;
+if (!slug) return Astro.rewrite("/404");
+
+const { entry } = await getEmDashEntry("pages", slug);
+if (!entry) return Astro.rewrite("/404");
+---
+
+<Portal
+  title={`${entry.data.title} | ガッコウレイヴ`}
+  description={entry.data.title}
+>
+  <article class="portal__section">
+    <p class="portal__back"><a href="/portal">← ポータルへ戻る</a></p>
+    <h2 class="portal__section-title">{entry.data.title}</h2>
+    <div class="portal__prose">
+      <PortableText value={entry.data.body} />
+    </div>
+  </article>
+</Portal>

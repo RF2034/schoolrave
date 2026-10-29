@@ -1,8 +1,128 @@
 ---
-import PortalPage from "@/components/pages/PortalPage";
 import Portal from "@/layouts/Portal.astro";
+import PortalPage from "@/components/pages/PortalPage";
+import { getEmDashCollection } from "emdash";
+import { PortableText } from "emdash/ui";
+import { formatDate } from "@/lib/portal-format";
+
+const [{ entries: notices }, { entries: submissions }] = await Promise.all([
+  getEmDashCollection("notices", { orderBy: { date: "desc" }, limit: 5 }),
+  getEmDashCollection("submissions", { orderBy: { sort: "asc" }, limit: 30 }),
+]);
+
+const pinned = notices.find((n) => n.data.pinned) ?? notices[0];
+const rest = notices.filter((n) => n.id !== pinned?.id);
 ---
 
-<Portal>
+<Portal title="ガッコウレイヴ 準備ポータル">
+  <section id="news" class="portal__section" aria-labelledby="news-heading">
+    <h2 id="news-heading" class="portal__section-title">お知らせ</h2>
+    {
+      pinned ? (
+        <div>
+          <p class="portal__notice-date">
+            {formatDate(pinned.data.date ?? pinned.data.publishedAt)}
+          </p>
+          <p class="portal__notice-title">{pinned.data.title}</p>
+          <div class="portal__prose">
+            <PortableText value={pinned.data.body} />
+          </div>
+        </div>
+      ) : (
+        <p class="portal__empty">お知らせはまだありません。</p>
+      )
+    }
+    {
+      rest.length > 0 && (
+        <ul class="portal__diary-list">
+          {rest.map((n) => (
+            <li class="portal__diary-item">
+              <div class="portal__diary-head">
+                <span class="portal__diary-date">
+                  {formatDate(n.data.date ?? n.data.publishedAt)}
+                </span>
+                <span class="portal__diary-title">{n.data.title}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+
+  <section
+    id="submissions"
+    class="portal__section"
+    aria-labelledby="submissions-heading"
+  >
+    <h2 id="submissions-heading" class="portal__section-title">
+      提出物・入力一覧
+    </h2>
+    {
+      submissions.length === 0 ? (
+        <p class="portal__empty">現在募集中のものはありません。</p>
+      ) : (
+        <div class="portal__table-wrap">
+          <table class="portal__table">
+            <thead>
+              <tr>
+                <th scope="col">内容</th>
+                <th scope="col">締切</th>
+                <th scope="col">入力先</th>
+              </tr>
+            </thead>
+            <tbody>
+              {submissions.map((item) => (
+                <tr>
+                  <td data-label="内容">{item.data.title}</td>
+                  <td data-label="締切">{item.data.deadline ?? "—"}</td>
+                  <td data-label="入力先">
+                    {item.data.url ? (
+                      <a
+                        href={item.data.url}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        {item.data.link_label || item.data.url}
+                        <span class="portal__sr-only">
+                          新しいタブで開きます
+                        </span>
+                      </a>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+  </section>
+
+  <section id="diary" class="portal__section" aria-labelledby="diary-heading">
+    <h2 id="diary-heading" class="portal__section-title">交換日記</h2>
+    <p class="portal__note portal__note--tight">
+      参加者の日々の記録は <a href="/portal/diary">交換日記</a>{" "}
+      からどうぞ。書き込みは管理画面の「交換日記」から追加できます。
+    </p>
+    <p class="portal__actions portal__link-block">
+      <a href="/_emdash/admin/content/diary/new">日記を書く</a>
+    </p>
+  </section>
+
+  <section
+    id="schedule"
+    class="portal__section"
+    aria-labelledby="schedule-heading"
+  >
+    <h2 id="schedule-heading" class="portal__section-title">スケジュール</h2>
+    <p class="portal__pending">スケジュール（Googleドライブ）</p>
+    <p class="portal__note portal__note--tight">
+      リンクは準備でき次第掲載します。
+    </p>
+  </section>
+
   <PortalPage />
 </Portal>

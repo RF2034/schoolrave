@@ -2,8 +2,12 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "schoolrave",
   "compatibility_date": "2026-09-13",
+  // NOTE: 現状の Astro 構成（output: "server" + @astrojs/node）は Workers に載らない。
+  // `npm run build` の出力は dist/client（静的）と dist/server（Node エントリ）に分かれるため、
+  // この assets 設定は Workers へデプロイする段階で D1 / R2 バインディングと合わせて作り直す。
+  // それまでは `wrangler deploy` が失敗する（壊れたサイトを公開しないための意図的な状態）。
   "assets": {
-    "directory": "./dist",
+    "directory": "./dist/client",
   },
   "observability": {
     "enabled": true,
