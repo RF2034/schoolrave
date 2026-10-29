@@ -1,0 +1,55 @@
+---
+import Portal from "@/layouts/Portal.astro";
+import { getEmDashCollection } from "emdash";
+import { formatDate, plainExcerpt } from "@/lib/portal-format";
+
+const { entries } = await getEmDashCollection("diary", {
+  orderBy: { date: "desc" },
+  limit: 30,
+});
+---
+
+<Portal title="交換日記 | ガッコウレイヴ">
+  <section class="portal__section" aria-labelledby="diary-heading">
+    <h2 id="diary-heading" class="portal__section-title">交換日記</h2>
+    <p class="portal__note portal__note--tight">
+      参加者の日々の記録。書き込みは管理画面の「交換日記」から追加できます。
+    </p>
+
+    {
+      entries.length === 0 ? (
+        <p class="portal__empty">
+          まだ書き込みがありません。管理画面から1ページ目を書いてみましょう。
+        </p>
+      ) : (
+        <ul class="portal__diary-list">
+          {entries.map((entry) => (
+            <li class="portal__diary-item">
+              <div class="portal__diary-head">
+                <span class="portal__diary-date">
+                  {formatDate(entry.data.date ?? entry.data.publishedAt)}
+                </span>
+                <a
+                  class="portal__diary-title"
+                  href={`/portal/diary/${entry.id}`}
+                >
+                  {entry.data.title}
+                </a>
+                {entry.data.mood && (
+                  <span class="portal__diary-mood">{entry.data.mood}</span>
+                )}
+              </div>
+              <p class="portal__diary-excerpt">
+                {plainExcerpt(entry.data.body)}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <p class="portal__actions portal__link-block">
+      <a href="/_emdash/admin/content/diary/new">日記を書く</a>
+    </p>
+  </section>
+</Portal>

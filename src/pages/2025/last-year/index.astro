@@ -1,6 +1,9 @@
 ---
 import LastYear2025 from "@/components/pages/LastYear2025";
 import Base from "@/layouts/Base.astro";
+
+// 公開ページは静的生成する（EmDash の server 出力から切り離す）。
+export const prerender = true;
 ---
 
 <Base
