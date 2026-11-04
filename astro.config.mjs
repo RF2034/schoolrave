@@ -9,7 +9,7 @@ export default defineConfig({
   compressHTML: true,
   integrations: [react()],
   redirects: {
-    "/": "/2026",
+    "/": "/2026/",
   },
   vite: {
     plugins: [tailwindcss()],

@@ -10,6 +10,8 @@ export default defineConfig({
     name: "schoolrave",
     compatibilityDate: "2026-09-13",
     workersDev: false,
+    previewUrls: false,
+    domains: ["schoolrave.net"],
     observability: {
       enabled: true,
     },
