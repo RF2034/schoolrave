@@ -136,10 +136,18 @@
   margin-top: 0.5rem;
 }
 
-.portal__pending {
-  margin: 0;
-  color: var(--portal-muted);
-  font-weight: 700;
+.portal__section--sheet {
+  width: min(96vw, 80rem);
+  margin-left: calc(50% - min(48vw, 40rem));
+}
+
+.portal__sheet {
+  display: block;
+  width: 100%;
+  height: 70vh;
+  min-height: 28rem;
+  margin-top: 1rem;
+  border: 1px solid var(--portal-border);
 }
 
 .portal__table-wrap {
