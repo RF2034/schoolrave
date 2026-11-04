@@ -1,6 +1,11 @@
-import type { ReactNode } from "react";
 import venue1f from "@/assets/portal/venue-1f.png";
 import venue2f from "@/assets/portal/venue-2f.png";
+import type { ReactNode } from "react";
+
+const RUNDOWN_SHEET_URL =
+  "https://docs.google.com/spreadsheets/d/1O6Pl5W10lLasni7azFAHcyKXQNZsM91ufCCVIGrvm6Q/edit?usp=sharing";
+const RUNDOWN_SHEET_PREVIEW =
+  "https://docs.google.com/spreadsheets/d/1O6Pl5W10lLasni7azFAHcyKXQNZsM91ufCCVIGrvm6Q/preview";
 
 const DRIVE_URL =
   "https://drive.google.com/drive/folders/1QG-uD__KaucfX4I0_MiiFZ0gjZcaMhik?usp=drive_link";
@@ -172,16 +177,25 @@ export default function PortalPage() {
 
         <section
           id="schedule"
-          className="portal__section"
+          className="portal__section portal__section--sheet"
           aria-labelledby="schedule-heading"
         >
           <h2 id="schedule-heading" className="portal__section-title">
-            スケジュール
+            香盤表
           </h2>
-          <p className="portal__pending">スケジュール（Googleドライブ）</p>
           <p className="portal__note portal__note--tight">
-            リンクは準備でき次第掲載します。
+            スプレッドシートの内容を表示しています。編集は元のシートで行います。
           </p>
+          <p className="portal__note">
+            <ExternalLink href={RUNDOWN_SHEET_URL}>
+              スプレッドシートを開く
+            </ExternalLink>
+          </p>
+          <iframe
+            className="portal__sheet"
+            title="ガッコウレイヴ香盤表"
+            src={RUNDOWN_SHEET_PREVIEW}
+          />
         </section>
 
         <section
