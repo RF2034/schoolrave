@@ -441,9 +441,54 @@ body:has(.portal__diary) #emdash-toolbar-bootstrap {
   border-bottom: 1px solid var(--portal-border);
 }
 
-.portal__packing-cash {
-  color: #b00020;
-  font-weight: 700;
+.portal__packing-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  cursor: pointer;
+}
+
+.portal__packing-check {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.portal__packing-box {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.2rem;
+  border: 2px solid var(--portal-ink);
+  border-radius: 2px;
+  background: var(--portal-surface);
+}
+
+.portal__packing-check:focus-visible + .portal__packing-box {
+  outline: 3px solid var(--portal-focus);
+  outline-offset: 2px;
+}
+
+.portal__packing-check:checked + .portal__packing-box {
+  background: #ffe566;
+}
+
+.portal__packing-check:checked + .portal__packing-box::after {
+  content: "";
+  display: block;
+  width: 0.65rem;
+  height: 0.35rem;
+  margin: 0.2rem 0 0 0.18rem;
+  border-bottom: 2px solid var(--portal-ink);
+  border-left: 2px solid var(--portal-ink);
+  transform: rotate(-45deg);
 }
 
 .portal__packing-mark {
