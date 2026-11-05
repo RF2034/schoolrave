@@ -228,21 +228,24 @@
 }
 
 .portal__diary-list {
-  margin: 1rem 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.portal__diary-item {
-  padding: 0.85rem 0;
-  border-top: 1px solid var(--portal-border);
+/* 一覧の li はリスト項目のまま伸ばさない。中身の高さだけ。 */
+.portal__diary .portal__section {
+  display: block;
+  flex: none;
+  height: auto;
+  min-height: 0;
 }
 
 .portal__diary-head {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.35rem 0.75rem;
+  align-items: center;
+  gap: 0.35rem 0.85rem;
   margin: 0;
 }
 
@@ -253,26 +256,32 @@
   font-size: 0.875rem;
 }
 
-.portal__diary-mood {
-  margin: 0;
-  font-size: 1.25rem;
-  line-height: 1;
-}
-
 .portal__diary-date {
   font-variant-numeric: tabular-nums;
 }
 
-.portal__diary-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  line-height: 1.4;
+.portal__notice-title .portal__diary-mood {
+  margin-left: 0.45rem;
+}
+
+.portal__diary-mood {
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 .portal__diary-excerpt {
-  margin: 0.35rem 0 0;
-  color: var(--portal-muted);
-  font-size: 0.9375rem;
+  margin: 0;
+  line-height: 1.7;
+}
+
+.portal__diary-head + .portal__prose {
+  margin-top: 0.75rem;
+}
+
+/* 閲覧ページだけ。EmDash はログイン中の編集者向けに全 HTML へピルを差し込む。管理画面は /_emdash で別ドキュメント。 */
+body:has(.portal__diary) #emdash-toolbar,
+body:has(.portal__diary) #emdash-toolbar-bootstrap {
+  display: none;
 }
 
 .portal__prose > :first-child {
@@ -297,10 +306,6 @@
 .portal__prose ul,
 .portal__prose ol {
   padding-left: 1.25rem;
-}
-
-.portal__actions {
-  margin: 1rem 0 0;
 }
 
 .portal__back {
