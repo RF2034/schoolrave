@@ -223,7 +223,7 @@
 }
 
 .portal__link-block {
-  margin: 0;
+  margin: 1rem 0 0;
   font-weight: 700;
 }
 
@@ -247,6 +247,14 @@
   align-items: center;
   gap: 0.35rem 0.85rem;
   margin: 0;
+}
+
+.portal__diary-list .portal__notice-title:has(+ .portal__diary-head) {
+  margin-bottom: 0.15rem;
+}
+
+.portal__diary-list .portal__diary-head {
+  margin-bottom: 0.75rem;
 }
 
 .portal__diary-date,

@@ -30,6 +30,11 @@
           "searchable": true
         },
         {
+          "slug": "name",
+          "label": "名前",
+          "type": "string"
+        },
+        {
           "slug": "date",
           "label": "日付",
           "type": "datetime",

@@ -19,6 +19,20 @@ const writeHref = "/_emdash/admin/content/diary/new";
       <p class="portal__meta">
         参加者の記録です。ポータルに入れる人は、自分の日記を書けます。
       </p>
+      <p class="portal__link-block">
+        <a href={writeHref}>日記を書く</a>
+      </p>
+      {
+        import.meta.env.DEV && (
+          <p class="portal__note">
+            ローカルでは先に
+            <a href={`/_emdash/api/setup/dev-bypass?redirect=${writeHref}`}>
+              開発用のログイン
+            </a>
+            を開いてから書きます。
+          </p>
+        )
+      }
     </header>
 
     <main aria-labelledby="diary-heading">
@@ -31,6 +45,10 @@ const writeHref = "/_emdash/admin/content/diary/new";
           <ul class="portal__diary-list">
             {entries.map((entry) => {
               const excerpt = plainExcerpt(entry.data.body);
+              const name =
+                typeof entry.data.name === "string"
+                  ? entry.data.name.trim()
+                  : "";
               return (
                 <li class="portal__section">
                   <p class="portal__notice-date">
@@ -42,6 +60,11 @@ const writeHref = "/_emdash/admin/content/diary/new";
                       <span class="portal__diary-mood">{entry.data.mood}</span>
                     )}
                   </h2>
+                  {name && (
+                    <p class="portal__diary-head">
+                      <span class="portal__diary-author">{name}</span>
+                    </p>
+                  )}
                   {excerpt && <p class="portal__diary-excerpt">{excerpt}</p>}
                 </li>
               );
@@ -49,23 +72,6 @@ const writeHref = "/_emdash/admin/content/diary/new";
           </ul>
         )
       }
-
-      <section class="portal__section">
-        <p class="portal__link-block">
-          <a href={writeHref}>日記を書く</a>
-        </p>
-        {
-          import.meta.env.DEV && (
-            <p class="portal__note">
-              ローカルでは先に
-              <a href={`/_emdash/api/setup/dev-bypass?redirect=${writeHref}`}>
-                開発用のログイン
-              </a>
-              を開いてから書きます。
-            </p>
-          )
-        }
-      </section>
     </main>
   </div>
 </Portal>
