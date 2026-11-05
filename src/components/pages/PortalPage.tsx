@@ -58,6 +58,71 @@ const SUBMISSIONS = [
   },
 ] as const;
 
+const PACKING: readonly {
+  heading: string;
+  items: readonly {
+    name: string;
+    note?: string;
+    emphasis?: "cash" | "mark";
+  }[];
+}[] = [
+  {
+    heading: "必ず持参！",
+    items: [
+      {
+        name: "現金（参加費＋SAでの食事代など）",
+        emphasis: "cash",
+        note: "参加費は現金で徴収しています。また行き帰りのSAや近隣施設での買い物、校内の自動販売機用にも現金があると安心です。",
+      },
+      {
+        name: "宿泊セット（着替え、歯ブラシ、タオル等）",
+        note: "シャンプー、ボディーソープ、ドライヤーは備え付けのものがあります。",
+      },
+      {
+        name: "秋冬物の服（薄手のシャツ等）",
+        note: "朝晩はかなり冷えます。真冬並みの防寒対策をお願いします。",
+      },
+      { name: "保険証 or マイナンバー（急病時などのため）", emphasis: "mark" },
+      { name: "各種充電ケーブル、変換コネクタ（スマホ、PC、他）" },
+    ],
+  },
+  {
+    heading: "あると便利",
+    items: [
+      {
+        name: "スリーピングマット/コット（寝袋の人のみ）",
+        note: "マットは床に敷く薄い敷物、コットは折りたたみの簡易ベッドです。寝袋で寝る人だけ持参します。",
+      },
+      { name: "モバイルバッテリー" },
+      {
+        name: "自前のコップ（タンブラー等）",
+        note: "保温保冷タンブラーは毎回便利だという声が上がっています。温かい飲み物をキープできるので寒さ対策にもなります。",
+      },
+      {
+        name: "室内履き（上履き/スリッパ等）",
+        note: "現地に貸し出しのスリッパもあります。",
+      },
+      {
+        name: "キャンプ用折り畳みイス",
+        note: "学校の椅子しかないため、リラックスして座ることのできる椅子があると便利です。",
+      },
+    ],
+  },
+  {
+    heading: "DJをするなら",
+    items: [
+      {
+        name: "USB/SSD/PC",
+        note: "曲データを入れたUSBメモリ・SSD、または再生用のPCです。",
+      },
+      {
+        name: "DJ用ヘッドホン/イヤホン",
+        note: "ブースで音を確認するものです。",
+      },
+    ],
+  },
+];
+
 const FLOOR_PLANS = [
   {
     src: venue1f.src,
@@ -152,6 +217,39 @@ export default function PortalPage() {
               進捗共有。目標は「開催日まであと少しなので報告のみくらいに！」
             </dd>
           </dl>
+        </section>
+
+        <section
+          id="packing"
+          className="portal__section"
+          aria-labelledby="packing-heading"
+        >
+          <h2 id="packing-heading" className="portal__section-title">
+            持ち物チェックリスト
+          </h2>
+          {PACKING.map((group) => (
+            <div className="portal__packing-group" key={group.heading}>
+              <h3 className="portal__packing-heading">{group.heading}</h3>
+              <ul className="portal__packing-list">
+                {group.items.map((item) => (
+                  <li className="portal__packing-item" key={item.name}>
+                    {item.emphasis === "cash" ? (
+                      <strong className="portal__packing-cash">
+                        {item.name}
+                      </strong>
+                    ) : item.emphasis === "mark" ? (
+                      <mark className="portal__packing-mark">{item.name}</mark>
+                    ) : (
+                      item.name
+                    )}
+                    {item.note ? (
+                      <p className="portal__packing-note">{item.note}</p>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </section>
 
         <section
