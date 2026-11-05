@@ -16,6 +16,11 @@
 # astro
 /.astro/
 /.cloudflare/
+/.emdash/
+/.wrangler/
+/data.db
+/data.db-*
+/emdash-env.d.ts
 /dist/
 /out/
 /.next/
