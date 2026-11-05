@@ -1,13 +1,19 @@
 ---
 import Base from "./Base.astro";
 import "@/styles/portal.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "準備ポータル | ガッコウレイヴ",
+  description = "参加スタッフ向けの準備用ポータルです。",
+} = Astro.props;
 ---
 
-<Base
-  title="準備ポータル | ガッコウレイヴ"
-  description="参加スタッフ向けの準備用ポータルです。"
-  robots="noindex, nofollow"
->
+<Base title={title} description={description} robots="noindex, nofollow">
   <div class="portal">
     <slot />
   </div>

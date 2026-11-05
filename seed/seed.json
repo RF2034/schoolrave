@@ -1,0 +1,61 @@
+{
+  "$schema": "https://emdashcms.com/seed.schema.json",
+  "version": "1",
+  "defaultLocale": "ja",
+  "meta": {
+    "name": "ガッコウレイヴ 交換日記",
+    "description": "参加スタッフが書く交換日記",
+    "author": "ガッコウレイヴ"
+  },
+  "settings": {
+    "title": "ガッコウレイヴ 準備ポータル",
+    "tagline": "参加スタッフ向け · 準備用"
+  },
+  "collections": [
+    {
+      "slug": "diary",
+      "label": "交換日記",
+      "labelSingular": "日記",
+      "description": "参加者が日々の進捗や雑談を書き込む時系列の交換日記",
+      "icon": "notebook-pen",
+      "urlPattern": "/portal/diary/{slug}",
+      "sortOrder": 1,
+      "supports": ["drafts", "revisions", "search"],
+      "fields": [
+        {
+          "slug": "title",
+          "label": "見出し",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "date",
+          "label": "日付",
+          "type": "datetime",
+          "required": true
+        },
+        {
+          "slug": "body",
+          "label": "本文",
+          "type": "portableText",
+          "searchable": true
+        },
+        {
+          "slug": "mood",
+          "label": "今日の気分",
+          "type": "select",
+          "validation": {
+            "options": [
+              "わいわい",
+              "もくもく",
+              "ねむい",
+              "たのしい",
+              "しんどい"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
