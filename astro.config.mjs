@@ -31,6 +31,18 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rolldownOptions: {
+        output: {
+          // kysely を分割するとチャンク同士の循環 import で Worker が起動時に落ちる。
+          manualChunks(id) {
+            if (id.replaceAll("\\", "/").includes("/node_modules/kysely/")) {
+              return "kysely";
+            }
+          },
+        },
+      },
+    },
   },
   devToolbar: { enabled: false },
 });
