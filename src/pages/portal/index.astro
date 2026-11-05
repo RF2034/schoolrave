@@ -8,3 +8,26 @@ export const prerender = true;
 <Portal>
   <PortalPage />
 </Portal>
+
+<script>
+  const key = "schoolrave-packing-v1";
+  const boxes = document.querySelectorAll<HTMLInputElement>(
+    "input[data-packing-id]",
+  );
+  let saved: Record<string, boolean> = {};
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) saved = JSON.parse(raw) as Record<string, boolean>;
+  } catch {
+    saved = {};
+  }
+  for (const box of boxes) {
+    const id = box.dataset.packingId;
+    if (!id) continue;
+    box.checked = saved[id] === true;
+    box.addEventListener("change", () => {
+      saved[id] = box.checked;
+      localStorage.setItem(key, JSON.stringify(saved));
+    });
+  }
+</script>

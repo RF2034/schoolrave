@@ -61,48 +61,63 @@ const SUBMISSIONS = [
 const PACKING: readonly {
   heading: string;
   items: readonly {
+    id: string;
     name: string;
     note?: string;
-    emphasis?: "cash" | "mark";
+    emphasis?: "mark";
   }[];
 }[] = [
   {
     heading: "必ず持参！",
     items: [
       {
+        id: "cash",
         name: "現金（参加費＋SAでの食事代など）",
-        emphasis: "cash",
+        emphasis: "mark",
         note: "参加費は現金で徴収しています。また行き帰りのSAや近隣施設での買い物、校内の自動販売機用にも現金があると安心です。",
       },
       {
+        id: "insurance",
+        name: "保険証 or マイナンバー（急病時などのため）",
+        emphasis: "mark",
+      },
+      {
+        id: "lodging",
         name: "宿泊セット（着替え、歯ブラシ、タオル等）",
         note: "シャンプー、ボディーソープ、ドライヤーは備え付けのものがあります。",
       },
       {
+        id: "clothes",
         name: "秋冬物の服（薄手のシャツ等）",
         note: "朝晩はかなり冷えます。真冬並みの防寒対策をお願いします。",
       },
-      { name: "保険証 or マイナンバー（急病時などのため）", emphasis: "mark" },
-      { name: "各種充電ケーブル、変換コネクタ（スマホ、PC、他）" },
+      {
+        id: "cables",
+        name: "各種充電ケーブル、変換コネクタ（スマホ、PC、他）",
+      },
     ],
   },
   {
     heading: "あると便利",
     items: [
       {
+        id: "mat",
         name: "スリーピングマット/コット（寝袋の人のみ）",
         note: "マットは床に敷く薄い敷物、コットは折りたたみの簡易ベッドです。寝袋で寝る人だけ持参します。",
       },
-      { name: "モバイルバッテリー" },
+      { id: "battery", name: "モバイルバッテリー" },
       {
+        id: "cup",
         name: "自前のコップ（タンブラー等）",
         note: "保温保冷タンブラーは毎回便利だという声が上がっています。温かい飲み物をキープできるので寒さ対策にもなります。",
       },
       {
+        id: "slippers",
         name: "室内履き（上履き/スリッパ等）",
         note: "現地に貸し出しのスリッパもあります。",
       },
       {
+        id: "chair",
         name: "キャンプ用折り畳みイス",
         note: "学校の椅子しかないため、リラックスして座ることのできる椅子があると便利です。",
       },
@@ -112,10 +127,12 @@ const PACKING: readonly {
     heading: "DJをするなら",
     items: [
       {
+        id: "media",
         name: "USB/SSD/PC",
         note: "曲データを入れたUSBメモリ・SSD、または再生用のPCです。",
       },
       {
+        id: "headphones",
         name: "DJ用ヘッドホン/イヤホン",
         note: "ブースで音を確認するものです。",
       },
@@ -232,16 +249,25 @@ export default function PortalPage() {
               <h3 className="portal__packing-heading">{group.heading}</h3>
               <ul className="portal__packing-list">
                 {group.items.map((item) => (
-                  <li className="portal__packing-item" key={item.name}>
-                    {item.emphasis === "cash" ? (
-                      <strong className="portal__packing-cash">
-                        {item.name}
-                      </strong>
-                    ) : item.emphasis === "mark" ? (
-                      <mark className="portal__packing-mark">{item.name}</mark>
-                    ) : (
-                      item.name
-                    )}
+                  <li className="portal__packing-item" key={item.id}>
+                    <label className="portal__packing-label">
+                      <input
+                        className="portal__packing-check"
+                        type="checkbox"
+                        data-packing-id={item.id}
+                      />
+                      <span
+                        className="portal__packing-box"
+                        aria-hidden="true"
+                      />
+                      {item.emphasis === "mark" ? (
+                        <mark className="portal__packing-mark">
+                          {item.name}
+                        </mark>
+                      ) : (
+                        <span>{item.name}</span>
+                      )}
+                    </label>
                     {item.note ? (
                       <p className="portal__packing-note">{item.note}</p>
                     ) : null}
