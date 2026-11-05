@@ -17,7 +17,8 @@ export default defineConfig({
   integrations: [
     react(),
     emdash({
-      database: d1({ binding: "DB", session: "auto", coalesce: true }),
+      // 複製の読み取り位置に固定されると、公開した日記が一覧に出ない。本体を読む。
+      database: d1({ binding: "DB", session: "disabled" }),
       auth: access({
         teamDomain: "schoolrave.cloudflareaccess.com",
         audienceEnvVar: "CF_ACCESS_AUDIENCE",
