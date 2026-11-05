@@ -96,6 +96,12 @@
   line-height: 1.4;
 }
 
+.portal__section-title--solo {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
 .portal__notice-date {
   margin: 0 0 0.35rem;
   color: var(--portal-muted);

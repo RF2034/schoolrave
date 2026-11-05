@@ -124,15 +124,12 @@ export default function PortalPage() {
           className="portal__section"
           aria-labelledby="diary-heading"
         >
-          <h2 id="diary-heading" className="portal__section-title">
-            交換日記
+          <h2
+            id="diary-heading"
+            className="portal__section-title portal__section-title--solo"
+          >
+            <a href="/portal/diary">交換日記入口</a>
           </h2>
-          <p className="portal__note">
-            参加者の記録です。ポータルに入れる人は、自分の日記を書けます。
-          </p>
-          <p className="portal__link-block">
-            <a href="/portal/diary">交換日記を開く</a>
-          </p>
         </section>
 
         <section
