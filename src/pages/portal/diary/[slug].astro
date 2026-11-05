@@ -19,34 +19,43 @@ const authors = entry?.data.bylines ?? [];
 <Portal
   title={entry ? `${entry.data.title} | 交換日記` : "交換日記 | ガッコウレイヴ"}
 >
-  <article class="portal__section portal__diary-entry">
-    <p class="portal__back"><a href="/portal/diary">交換日記の一覧</a></p>
+  <div class="portal__inner portal__diary">
     {
       entry ? (
-        <>
-          <header>
-            <p class="portal__diary-date">
-              {formatDate(entry.data.date ?? entry.data.publishedAt)}
-            </p>
-            <h2 class="portal__section-title">{entry.data.title}</h2>
+        <article class="portal__section">
+          <p class="portal__back">
+            <a href="/portal/diary">交換日記の一覧</a>
+          </p>
+          <p class="portal__notice-date">
+            {formatDate(entry.data.date ?? entry.data.publishedAt)}
+          </p>
+          <h1 class="portal__notice-title">
+            {entry.data.title}
+            {entry.data.mood && (
+              <span class="portal__diary-mood">{entry.data.mood}</span>
+            )}
+          </h1>
+          {authors.length > 0 && (
             <p class="portal__diary-head">
               {authors.map((credit) => (
                 <span class="portal__diary-author">
                   {credit.byline.displayName}
                 </span>
               ))}
-              {entry.data.mood && (
-                <span class="portal__diary-mood">{entry.data.mood}</span>
-              )}
             </p>
-          </header>
+          )}
           <div class="portal__prose">
             <PortableText value={entry.data.body} />
           </div>
-        </>
+        </article>
       ) : (
-        <p class="portal__empty">この日記は見つかりません。</p>
+        <section class="portal__section">
+          <p class="portal__back">
+            <a href="/portal/diary">交換日記の一覧</a>
+          </p>
+          <p class="portal__empty">この日記は見つかりません。</p>
+        </section>
       )
     }
-  </article>
+  </div>
 </Portal>
