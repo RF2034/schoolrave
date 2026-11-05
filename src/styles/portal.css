@@ -247,11 +247,16 @@
 }
 
 .portal__diary-date,
-.portal__diary-author,
-.portal__diary-mood {
+.portal__diary-author {
   margin: 0;
   color: var(--portal-muted);
   font-size: 0.875rem;
+}
+
+.portal__diary-mood {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 .portal__diary-date {
@@ -395,4 +400,48 @@
     font-size: 0.75rem;
     font-weight: 700;
   }
+}
+
+.portal__packing-group + .portal__packing-group {
+  margin-top: 1.15rem;
+}
+
+.portal__packing-heading {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.portal__packing-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portal__packing-item {
+  padding: 0.55rem 0.1rem;
+  border-top: 1px solid var(--portal-border);
+}
+
+.portal__packing-item:last-child {
+  border-bottom: 1px solid var(--portal-border);
+}
+
+.portal__packing-cash {
+  color: #b00020;
+  font-weight: 700;
+}
+
+.portal__packing-mark {
+  padding: 0 0.15em;
+  background-color: #ffe566;
+  color: inherit;
+}
+
+.portal__packing-note {
+  margin: 0.15rem 0 0;
+  color: var(--portal-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
