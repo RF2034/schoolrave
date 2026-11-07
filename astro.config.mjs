@@ -1,7 +1,7 @@
 // @ts-check
 import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
-import { access, d1 } from "@emdash-cms/cloudflare";
+import { access, d1, r2 } from "@emdash-cms/cloudflare";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
@@ -19,6 +19,9 @@ export default defineConfig({
     emdash({
       // 複製の読み取り位置に固定されると、公開した日記が一覧に出ない。本体を読む。
       database: d1({ binding: "DB", session: "disabled" }),
+      // 画像も動画もこの 1 つ。既定の 50MB。超えたファイルはアップロード時に拒否する。
+      storage: r2({ binding: "MEDIA" }),
+      maxUploadSize: 50 * 1024 * 1024,
       auth: access({
         teamDomain: "schoolrave.cloudflareaccess.com",
         audienceEnvVar: "CF_ACCESS_AUDIENCE",

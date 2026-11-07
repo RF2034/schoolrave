@@ -23,4 +23,11 @@
       "database_name": "schoolrave-portal",
     },
   ],
+  // 日記の画像と動画。バケット本体はまだ作っていない。
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "schoolrave-media",
+    },
+  ],
 }

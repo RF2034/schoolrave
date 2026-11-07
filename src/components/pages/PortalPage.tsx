@@ -26,36 +26,6 @@ const SUBMISSIONS = [
     href: "https://docs.google.com/forms/d/e/1FAIpQLSf3xvnQXdUQERvIjSYixsQjWn5B4Y1hxqoyueYP25heQSaydA/viewform?usp=dialog",
     linkLabel: "Googleフォーム",
   },
-  {
-    title: "ミニイベント主催・参加者 募集",
-    deadline: "11/1（日）24:00",
-    href: "https://discord.com/channels/805847994062340146/1553327285006770186",
-    linkLabel: "Discord「ガッコウレイヴ2026 ミニイベント告知・連絡用」",
-  },
-  {
-    title: "個人DJ ブース使用予約",
-    deadline: "11/1（日）24:00",
-    href: "https://discord.com/channels/805847994062340146/1553327015812141066",
-    linkLabel: "Discord「ガッコウレイヴ2026 DJブース事前予約・連絡質問用」",
-  },
-  {
-    title: "食事好き嫌いアンケート",
-    deadline: "11/1（日）24:00",
-    href: "https://forms.gle/pmaudE5uYesk5wM18",
-    linkLabel: "Googleフォーム",
-  },
-  {
-    title: "公式X 投稿ネタ募集（各班の進捗、過去回の思い出）",
-    deadline: "10/15（木）24:00",
-    href: "https://forms.gle/9LHuk31womRNRS3x8",
-    linkLabel: "Googleフォーム",
-  },
-  {
-    title: "ドリンクアンケート（飲酒量・飲みたいもの・カクテル・高い酒）",
-    deadline: "10/12（月）24:00",
-    href: "https://docs.google.com/forms/d/e/1FAIpQLSfpkHXIebDWLr-fZ6od3Se_HhHJEQAJoM-pOv5DMkFRp5AAZQ/viewform",
-    linkLabel: "Googleフォーム",
-  },
 ] as const;
 
 const PACKING: readonly {
@@ -222,17 +192,15 @@ export default function PortalPage() {
           <h2 id="news-heading" className="portal__section-title">
             お知らせ
           </h2>
-          <p className="portal__notice-date">更新日：2026/10/01</p>
+          <p className="portal__notice-date">更新日：2026/11/08</p>
           <p className="portal__notice-title">次回の定例ミーティング</p>
           <dl className="portal__dl">
             <dt>日時</dt>
-            <dd>2026年10月15日（木） 21:00〜</dd>
+            <dd>2026年11月19日（木） 21:00〜</dd>
             <dt>場所 / 形式</dt>
             <dd>オンライン / Discordサーバー内 #大会議室</dd>
             <dt>議題</dt>
-            <dd>
-              進捗共有。目標は「開催日まであと少しなので報告のみくらいに！」
-            </dd>
+            <dd>進捗共有。目標は「直前！全部終わらせて！」</dd>
           </dl>
         </section>
 
