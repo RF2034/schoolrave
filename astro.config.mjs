@@ -28,6 +28,7 @@ export default defineConfig({
         // Author。Access を通った人は自分の日記を公開できる。
         defaultRole: 30,
       }),
+      middleware: { outer: "./src/middleware/admin-view-site.ts" },
     }),
   ],
   redirects: {
