@@ -227,6 +227,33 @@
   font-weight: 700;
 }
 
+.portal__link-block a + a,
+.portal__back a + a {
+  margin-left: 1.25rem;
+}
+
+.portal__steps {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.portal__steps > li + li {
+  margin-top: 1.5rem;
+}
+
+.portal__steps p {
+  margin: 0;
+}
+
+.portal__guide-shot {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin-top: 0.6rem;
+  border: 1px solid var(--portal-border);
+}
+
 .portal__diary-list {
   margin: 0;
   padding: 0;

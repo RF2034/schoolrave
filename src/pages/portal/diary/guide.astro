@@ -1,0 +1,67 @@
+---
+import listShot from "@/assets/portal/diary-guide-list.png";
+import publishShot from "@/assets/portal/diary-guide-publish.png";
+import writeShot from "@/assets/portal/diary-guide-write.png";
+import Portal from "@/layouts/Portal.astro";
+
+export const prerender = true;
+---
+
+<Portal title="使い方 | 交換日記">
+  <div class="portal__inner portal__diary">
+    <header class="portal__header">
+      <p class="portal__back">
+        <a href="/portal">準備ポータルに戻る</a>
+        <a href="/portal/diary">交換日記の一覧</a>
+      </p>
+      <h1 class="portal__title">使い方</h1>
+    </header>
+    <section class="portal__section">
+      <ol class="portal__steps">
+        <li>
+          <p>
+            日記トップページでは記事が閲覧できます<br />
+            記事タイトルをクリックすると記事のページに移ります
+          </p>
+          <img
+            class="portal__guide-shot"
+            src={listShot.src}
+            width={listShot.width}
+            height={listShot.height}
+            alt="交換日記の一覧。日記を書くリンクと、見出しのリンクがある。"
+          />
+        </li>
+        <li>
+          <p>
+            「日記を書く」をクリックすると記事の作成ができます<br />
+            見出し、名前、今日の日付、本文、今日の気分を入れて保存ボタンを押してください<br
+            />
+            記事の内容が保存されます
+          </p>
+          <img
+            class="portal__guide-shot"
+            src={writeShot.src}
+            width={writeShot.width}
+            height={writeShot.height}
+            alt="新しい日記の入力画面。見出し、名前、日付、本文、今日の気分と、右上の保存。"
+          />
+        </li>
+        <li>
+          <p>
+            保存ボタンを押しても記事は公開されません。<br />
+            下書き状態で保持されます。<br />
+            下書き状態のときに「今すぐ公開」を押すと記事が公開されます。<br />
+            忘れずに公開するようにしてください。
+          </p>
+          <img
+            class="portal__guide-shot"
+            src={publishShot.src}
+            width={publishShot.width}
+            height={publishShot.height}
+            alt="今すぐ公開ボタン。下書き版はサイトに表示されないと書いてある。"
+          />
+        </li>
+      </ol>
+    </section>
+  </div>
+</Portal>

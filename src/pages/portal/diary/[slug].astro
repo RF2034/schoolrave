@@ -25,6 +25,7 @@ const name = typeof entry?.data.name === "string" ? entry.data.name.trim() : "";
       entry ? (
         <article class="portal__section">
           <p class="portal__back">
+            <a href="/portal">準備ポータルに戻る</a>
             <a href="/portal/diary">交換日記の一覧</a>
           </p>
           <p class="portal__notice-date">
@@ -53,6 +54,7 @@ const name = typeof entry?.data.name === "string" ? entry.data.name.trim() : "";
       ) : (
         <section class="portal__section">
           <p class="portal__back">
+            <a href="/portal">準備ポータルに戻る</a>
             <a href="/portal/diary">交換日記の一覧</a>
           </p>
           <p class="portal__empty">この日記は見つかりません。</p>
