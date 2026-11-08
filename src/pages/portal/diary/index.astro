@@ -5,9 +5,14 @@ import { getEmDashCollection } from "emdash";
 
 export const prerender = false;
 
+const GROUPS = ["1組", "2組", "3組", "4組", "5組", "6組"] as const;
+const requested = Astro.url.searchParams.get("kumi");
+const kumi = GROUPS.find((group) => group === requested);
+
 const { entries } = await getEmDashCollection("diary", {
   orderBy: { date: "desc" },
   limit: 30,
+  ...(kumi ? { where: { kumi } } : {}),
 });
 const writeHref = "/_emdash/admin/content/diary/new";
 ---
@@ -37,10 +42,29 @@ const writeHref = "/_emdash/admin/content/diary/new";
     </header>
 
     <main aria-labelledby="diary-heading">
+      <nav class="portal__filters" aria-label="組で絞り込む">
+        <a href="/portal/diary" aria-current={kumi ? undefined : "page"}
+          >すべて</a
+        >
+        {
+          GROUPS.map((group) => (
+            <a
+              href={`/portal/diary?kumi=${encodeURIComponent(group)}`}
+              aria-current={kumi === group ? "page" : undefined}
+            >
+              {group}
+            </a>
+          ))
+        }
+      </nav>
       {
         entries.length === 0 ? (
           <section class="portal__section">
-            <p class="portal__empty">まだ書き込みがありません。</p>
+            <p class="portal__empty">
+              {kumi
+                ? `${kumi}の書き込みはまだありません。`
+                : "まだ書き込みがありません。"}
+            </p>
           </section>
         ) : (
           <ul class="portal__diary-list">
@@ -49,6 +73,10 @@ const writeHref = "/_emdash/admin/content/diary/new";
               const name =
                 typeof entry.data.name === "string"
                   ? entry.data.name.trim()
+                  : "";
+              const group =
+                typeof entry.data.kumi === "string"
+                  ? entry.data.kumi.trim()
                   : "";
               return (
                 <li class="portal__section">
@@ -61,9 +89,12 @@ const writeHref = "/_emdash/admin/content/diary/new";
                       <span class="portal__diary-mood">{entry.data.mood}</span>
                     )}
                   </h2>
-                  {name && (
+                  {(name || group) && (
                     <p class="portal__diary-head">
-                      <span class="portal__diary-author">{name}</span>
+                      {group && (
+                        <span class="portal__diary-author">{group}</span>
+                      )}
+                      {name && <span class="portal__diary-author">{name}</span>}
                     </p>
                   )}
                   {excerpt && <p class="portal__diary-excerpt">{excerpt}</p>}

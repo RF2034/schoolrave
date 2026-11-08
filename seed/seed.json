@@ -35,6 +35,15 @@
           "type": "string"
         },
         {
+          "slug": "kumi",
+          "label": "組",
+          "type": "select",
+          "required": true,
+          "validation": {
+            "options": ["1組", "2組", "3組", "4組", "5組", "6組"]
+          }
+        },
+        {
           "slug": "date",
           "label": "日付",
           "type": "datetime",
