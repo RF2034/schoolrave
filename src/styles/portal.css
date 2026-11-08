@@ -254,6 +254,18 @@
   border: 1px solid var(--portal-border);
 }
 
+.portal__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  margin: 0 0 1.25rem;
+}
+
+.portal__filters a[aria-current="page"] {
+  color: var(--portal-ink);
+  font-weight: 700;
+}
+
 .portal__diary-list {
   margin: 0;
   padding: 0;
