@@ -193,16 +193,13 @@ export default function PortalPage() {
           id="packing"
           className="portal__section"
           aria-labelledby="packing-heading"
+          data-check-group="持ち物"
         >
           <h2 id="packing-heading" className="portal__section-title">
             持ち物チェックリスト
           </h2>
           {PACKING.map((group) => (
-            <div
-              className="portal__packing-group"
-              data-check-group={group.heading}
-              key={group.heading}
-            >
+            <div className="portal__packing-group" key={group.heading}>
               <h3 className="portal__packing-heading">{group.heading}</h3>
               <ul className="portal__packing-list">
                 {group.items.map((item) => (
