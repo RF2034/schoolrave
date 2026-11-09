@@ -25,14 +25,8 @@ const DRIVE_TREE = `ガッコウレイヴ2026/
 const TASKS = [
   {
     id: "profile-book",
-    name: "プロフィール帳（作成必須）",
+    name: "プロフィール帳作成",
     href: "https://canva.link/gyidblgyyn1uyyi",
-    lines: [
-      "参加者同士でお互いのことを知れるきっかけとして、当日までに作成してください。",
-      "2ページ以降の空いたページに入力します。空きがないときは1ページ目を複製してください。",
-      "締切は11月16日（月）までです。",
-      "ご不明な点はアク班の三角まで。",
-    ],
   },
 ] as const;
 
@@ -260,18 +254,8 @@ export default function PortalPage() {
                       data-task-id={item.id}
                     />
                     <span className="portal__packing-box" aria-hidden="true" />
-                    <span>{item.name}</span>
+                    <ExternalLink href={item.href}>{item.name}</ExternalLink>
                   </label>
-                  {item.lines.map((line) => (
-                    <p className="portal__packing-note" key={line}>
-                      {line}
-                    </p>
-                  ))}
-                  <p className="portal__packing-note">
-                    <ExternalLink href={item.href}>
-                      プロフィール帳を開く
-                    </ExternalLink>
-                  </p>
                 </li>
               ))}
             </ul>
