@@ -22,12 +22,17 @@ const DRIVE_TREE = `ガッコウレイヴ2026/
 │   └── 各ロール/
 └── その他/`;
 
-const SUBMISSIONS = [
+const TASKS = [
   {
-    title: "アクティビティ企画募集",
-    deadline: "無し",
-    href: "https://docs.google.com/forms/d/e/1FAIpQLSf3xvnQXdUQERvIjSYixsQjWn5B4Y1hxqoyueYP25heQSaydA/viewform?usp=dialog",
-    linkLabel: "Googleフォーム",
+    id: "profile-book",
+    name: "プロフィール帳（作成必須）",
+    href: "https://canva.link/gyidblgyyn1uyyi",
+    lines: [
+      "参加者同士でお互いのことを知れるきっかけとして、当日までに作成してください。",
+      "2ページ以降の空いたページに入力します。空きがないときは1ページ目を複製してください。",
+      "締切は11月16日（月）までです。",
+      "ご不明な点はアク班の三角まで。",
+    ],
   },
 ] as const;
 
@@ -199,7 +204,11 @@ export default function PortalPage() {
             持ち物チェックリスト
           </h2>
           {PACKING.map((group) => (
-            <div className="portal__packing-group" key={group.heading}>
+            <div
+              className="portal__packing-group"
+              data-check-group={group.heading}
+              key={group.heading}
+            >
               <h3 className="portal__packing-heading">{group.heading}</h3>
               <ul className="portal__packing-list">
                 {group.items.map((item) => (
@@ -240,29 +249,32 @@ export default function PortalPage() {
           <h2 id="submissions-heading" className="portal__section-title">
             提出物・入力一覧
           </h2>
-          <div className="portal__table-wrap">
-            <table className="portal__table">
-              <thead>
-                <tr>
-                  <th scope="col">内容</th>
-                  <th scope="col">締切</th>
-                  <th scope="col">入力先</th>
-                </tr>
-              </thead>
-              <tbody>
-                {SUBMISSIONS.map((item) => (
-                  <tr key={item.title}>
-                    <td data-label="内容">{item.title}</td>
-                    <td data-label="締切">{item.deadline}</td>
-                    <td data-label="入力先">
-                      <ExternalLink href={item.href}>
-                        {item.linkLabel}
-                      </ExternalLink>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="portal__packing-group" data-check-group="提出物">
+            <ul className="portal__packing-list">
+              {TASKS.map((item) => (
+                <li className="portal__packing-item" key={item.id}>
+                  <label className="portal__packing-label">
+                    <input
+                      className="portal__packing-check"
+                      type="checkbox"
+                      data-task-id={item.id}
+                    />
+                    <span className="portal__packing-box" aria-hidden="true" />
+                    <span>{item.name}</span>
+                  </label>
+                  {item.lines.map((line) => (
+                    <p className="portal__packing-note" key={line}>
+                      {line}
+                    </p>
+                  ))}
+                  <p className="portal__packing-note">
+                    <ExternalLink href={item.href}>
+                      プロフィール帳を開く
+                    </ExternalLink>
+                  </p>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
@@ -274,9 +286,6 @@ export default function PortalPage() {
           <h2 id="schedule-heading" className="portal__section-title">
             香盤表
           </h2>
-          <p className="portal__note portal__note--tight">
-            スプレッドシートの内容を表示しています。編集は元のシートで行います。
-          </p>
           <p className="portal__note">
             <ExternalLink href={RUNDOWN_SHEET_URL}>
               スプレッドシートを開く
@@ -297,9 +306,6 @@ export default function PortalPage() {
           <h2 id="venue-heading" className="portal__section-title">
             会場見取り図
           </h2>
-          <p className="portal__note portal__note--tight">
-            スプレッドシートの内容を表示しています。編集は元のシートで行います。
-          </p>
           <p className="portal__note">
             <ExternalLink href={VENUE_SHEET_URL}>
               スプレッドシートを開く
@@ -331,6 +337,8 @@ export default function PortalPage() {
           </pre>
         </section>
       </main>
+
+      <p id="portal-celebrate" className="portal__sr-only" aria-live="polite" />
 
       <footer className="portal__footer">
         <p>機密情報は掲載しません。必要な共有はドライブ経由で行います。</p>

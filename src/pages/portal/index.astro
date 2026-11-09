@@ -10,24 +10,44 @@ export const prerender = true;
 </Portal>
 
 <script>
-  const key = "schoolrave-packing-v1";
-  const boxes = document.querySelectorAll<HTMLInputElement>(
-    "input[data-packing-id]",
-  );
-  let saved: Record<string, boolean> = {};
-  try {
-    const raw = localStorage.getItem(key);
-    if (raw) saved = JSON.parse(raw) as Record<string, boolean>;
-  } catch {
-    saved = {};
+  import { groupComplete } from "@/lib/check-group.ts";
+  import { launchFireworks } from "@/lib/fireworks.ts";
+
+  function bind(key: string, selector: string) {
+    const boxes = document.querySelectorAll<HTMLInputElement>(selector);
+    let saved: Record<string, boolean> = {};
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) saved = JSON.parse(raw) as Record<string, boolean>;
+    } catch {
+      saved = {};
+    }
+    for (const box of boxes) {
+      const id = box.dataset.packingId ?? box.dataset.taskId;
+      if (!id) continue;
+      box.checked = saved[id] === true;
+      box.addEventListener("change", () => {
+        saved[id] = box.checked;
+        localStorage.setItem(key, JSON.stringify(saved));
+        if (!box.checked) return;
+        const group = box.closest("[data-check-group]");
+        if (!group) return;
+        const checked = [
+          ...group.querySelectorAll<HTMLInputElement>("input[type='checkbox']"),
+        ].map((input) => input.checked);
+        if (!groupComplete(checked)) return;
+        const live = document.getElementById("portal-celebrate");
+        if (live) {
+          live.textContent = "";
+          requestAnimationFrame(() => {
+            live.textContent = "チェックが揃いました";
+          });
+        }
+        launchFireworks();
+      });
+    }
   }
-  for (const box of boxes) {
-    const id = box.dataset.packingId;
-    if (!id) continue;
-    box.checked = saved[id] === true;
-    box.addEventListener("change", () => {
-      saved[id] = box.checked;
-      localStorage.setItem(key, JSON.stringify(saved));
-    });
-  }
+
+  bind("schoolrave-packing-v1", "input[data-packing-id]");
+  bind("schoolrave-tasks-v1", "input[data-task-id]");
 </script>
