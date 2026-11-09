@@ -359,6 +359,7 @@ body:has(.portal__diary) #emdash-toolbar-bootstrap {
   z-index: 80;
   width: 100%;
   height: 100%;
+  background: transparent;
   pointer-events: none;
 }
 

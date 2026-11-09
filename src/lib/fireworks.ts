@@ -1,5 +1,4 @@
 const BURSTS = 30;
-const SKY = "#070b0c";
 const HUES = [48, 168, 312, 198, 18, 52, 278, 128];
 
 type Point = { x: number; y: number };
@@ -88,8 +87,8 @@ function burst(rocket: Rocket) {
       life: 1,
       decay: 0.01 + Math.random() * 0.004,
       color: rocket.rainbow
-        ? `hsl(${(i / count) * 360} 100% 62%)`
-        : `hsl(${rocket.hue} 100% 62%)`,
+        ? `hsl(${(i / count) * 360} 90% 42%)`
+        : `hsl(${rocket.hue} 90% 42%)`,
       width: 2.4,
       trail: [{ x: rocket.x, y: rocket.y }],
     });
@@ -126,9 +125,7 @@ function frame(now: number) {
   const { w, h } = skySize();
   ctx.globalCompositeOperation = "source-over";
   ctx.globalAlpha = 1;
-  ctx.fillStyle = SKY;
-  ctx.fillRect(0, 0, w, h);
-  ctx.globalCompositeOperation = "lighter";
+  ctx.clearRect(0, 0, w, h);
   ctx.lineCap = "round";
 
   if (left > 0 && now - lastSpawn > 100) {
@@ -143,7 +140,7 @@ function frame(now: number) {
     rocket.x += rocket.vx;
     rocket.y += rocket.vy;
     remember(rocket.trail, rocket.x, rocket.y);
-    drawTrail(ctx, rocket.trail, `hsl(${rocket.hue} 100% 72%)`, 2.6);
+    drawTrail(ctx, rocket.trail, `hsl(${rocket.hue} 90% 40%)`, 2.6);
     if (rocket.y <= rocket.targetY) {
       burst(rocket);
       rockets.splice(i, 1);
@@ -205,7 +202,8 @@ export function launchFireworks(): void {
   canvas = document.createElement("canvas");
   canvas.className = "portal__fireworks";
   canvas.setAttribute("aria-hidden", "true");
-  canvas.style.background = SKY;
+  canvas.style.pointerEvents = "none";
+  canvas.style.background = "transparent";
   canvas.style.opacity = "1";
   document.body.appendChild(canvas);
   ctx = canvas.getContext("2d");
