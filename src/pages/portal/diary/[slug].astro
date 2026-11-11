@@ -122,6 +122,28 @@ const commentLabels = {
 <script is:inline>
   const commentEmail = "comment@schoolrave.net";
   for (const form of document.querySelectorAll("[data-ec-comment-form]")) {
+    form.dataset.userName = "";
+    const locked = form.querySelector(".ec-comment-user-info");
+    if (locked) {
+      const label = document.createElement("label");
+      label.className = "ec-comment-form-field";
+      const caption = document.createElement("span");
+      caption.textContent = "名前";
+      const name = document.createElement("input");
+      name.type = "text";
+      name.name = "authorName";
+      name.required = true;
+      name.maxLength = 100;
+      name.autocomplete = "off";
+      label.append(caption, name);
+      locked.replaceWith(label);
+    }
+    const name = form.querySelector('input[name="authorName"]');
+    if (name instanceof HTMLInputElement) {
+      name.value = "";
+      name.readOnly = false;
+      name.autocomplete = "off";
+    }
     const email = form.querySelector('input[name="authorEmail"]');
     if (!(email instanceof HTMLInputElement)) continue;
     email.value = commentEmail;
