@@ -135,6 +135,7 @@ const commentLabels = {
       name.required = true;
       name.maxLength = 100;
       name.autocomplete = "off";
+      name.placeholder = "名前を入力";
       label.append(caption, name);
       locked.replaceWith(label);
     }
@@ -143,6 +144,7 @@ const commentLabels = {
       name.value = "";
       name.readOnly = false;
       name.autocomplete = "off";
+      name.placeholder = "名前を入力";
     }
     const email = form.querySelector('input[name="authorEmail"]');
     if (!(email instanceof HTMLInputElement)) continue;
@@ -181,6 +183,10 @@ const commentLabels = {
     ids.push(id);
     const bar = document.createElement("div");
     bar.className = "portal__reacts";
+    const caption = document.createElement("p");
+    caption.className = "portal__reacts-label";
+    caption.textContent = "スタンプ";
+    bar.append(caption);
     for (const choice of choices) {
       const button = document.createElement("button");
       button.type = "button";
