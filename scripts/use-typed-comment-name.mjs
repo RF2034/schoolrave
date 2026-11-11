@@ -30,3 +30,18 @@ for (const root of roots) {
 if (patched === 0 && already === 0) {
   throw new Error("comment author name override was not found");
 }
+
+const dateFile = "node_modules/emdash/src/components/Comments.astro";
+const dateFrom = `\thour: "numeric",
+\tminute: "2-digit",
+});`;
+const dateTo = `\thour: "numeric",
+\tminute: "2-digit",
+\ttimeZone: "Asia/Tokyo",
+});`;
+const dateText = readFileSync(dateFile, "utf8");
+if (dateText.includes(dateFrom)) {
+  writeFileSync(dateFile, dateText.replace(dateFrom, dateTo));
+} else if (!dateText.includes('timeZone: "Asia/Tokyo"')) {
+  throw new Error("comment date format was not found");
+}
