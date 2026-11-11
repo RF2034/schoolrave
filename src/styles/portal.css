@@ -306,6 +306,36 @@
   margin-top: 1.25rem;
 }
 
+.portal__reacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+}
+
+.portal__react {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--portal-border);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.portal__react[aria-pressed="true"] {
+  border-color: var(--portal-border-strong);
+  background: #ffe566;
+}
+
+.portal__react:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
 /* ponytail: 投稿APIはメール必須。画面は名前とコメントだけ。連絡先が要るならこの非表示を外す。 */
 .portal__comments label:has(input[name="authorEmail"]),
 .portal__comments .ec-comment-user-email {

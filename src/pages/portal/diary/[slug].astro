@@ -1,6 +1,7 @@
 ---
 import { env } from "cloudflare:workers";
 import Portal from "@/layouts/Portal.astro";
+import { REACTIONS } from "@/lib/diary-reactions";
 import { formatDate } from "@/lib/portal-format";
 import { getEmDashEntry } from "emdash";
 import { PortableText } from "emdash/ui";
@@ -37,7 +38,6 @@ if (entry && "DB" in env && env.DB) {
 const commentLabels = {
   heading: (count: number) =>
     count === 0 ? "コメントはまだありません" : `コメント ${count}件`,
-  like: "いいね",
   member: "メンバー",
 };
 ---
@@ -80,7 +80,6 @@ const commentLabels = {
             <Comments
               collection="diary"
               contentId={entry.id}
-              reactions
               locale="ja-JP"
               labels={commentLabels}
             />
@@ -114,6 +113,12 @@ const commentLabels = {
   </div>
 </Portal>
 
+<script
+  id="diary-reaction-choices"
+  type="application/json"
+  set:html={JSON.stringify(REACTIONS)}
+/>
+
 <script is:inline>
   const commentEmail = "comment@schoolrave.net";
   for (const form of document.querySelectorAll("[data-ec-comment-form]")) {
@@ -140,5 +145,86 @@ const commentLabels = {
       location.reload();
     });
     observer.observe(status, { attributes: true, attributeFilter: ["class"] });
+  });
+
+  const choiceNode = document.getElementById("diary-reaction-choices");
+  const choices = choiceNode ? JSON.parse(choiceNode.textContent || "[]") : [];
+  const comments = [
+    ...document.querySelectorAll(".ec-comment[data-comment-id]"),
+  ];
+  const ids = [];
+  for (const comment of comments) {
+    const id = comment.getAttribute("data-comment-id");
+    if (!id) continue;
+    ids.push(id);
+    const bar = document.createElement("div");
+    bar.className = "portal__reacts";
+    for (const choice of choices) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "portal__react";
+      button.dataset.emoji = choice.emoji;
+      button.setAttribute("aria-pressed", "false");
+      button.setAttribute("aria-label", choice.label);
+      const icon = document.createElement("span");
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = choice.emoji;
+      const count = document.createElement("span");
+      count.dataset.count = "0";
+      button.append(icon, count);
+      bar.append(button);
+    }
+    comment.append(bar);
+  }
+
+  function paint(comment, payload) {
+    const id = comment.getAttribute("data-comment-id");
+    const counts = (payload.counts && payload.counts[id]) || {};
+    const mine = new Set((payload.mine && payload.mine[id]) || []);
+    for (const button of comment.querySelectorAll(".portal__react")) {
+      const emoji = button.dataset.emoji;
+      const n = Number(counts[emoji] || 0);
+      const count = button.querySelector("[data-count]");
+      if (count) {
+        count.textContent = n > 0 ? String(n) : "";
+        count.dataset.count = String(n);
+      }
+      button.setAttribute("aria-pressed", mine.has(emoji) ? "true" : "false");
+    }
+  }
+
+  if (ids.length > 0) {
+    fetch("/portal/diary/reactions?ids=" + encodeURIComponent(ids.join(",")))
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        if (!payload) return;
+        for (const comment of comments) paint(comment, payload);
+      })
+      .catch(() => {});
+  }
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest(".portal__react");
+    if (!button) return;
+    const comment = button.closest(".ec-comment");
+    const commentId = comment?.getAttribute("data-comment-id");
+    const emoji = button.dataset.emoji;
+    if (!comment || !commentId || !emoji) return;
+    button.disabled = true;
+    fetch("/portal/diary/reactions", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ commentId, emoji }),
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        if (payload) paint(comment, payload);
+      })
+      .catch(() => {})
+      .finally(() => {
+        button.disabled = false;
+      });
   });
 </script>
