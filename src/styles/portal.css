@@ -290,6 +290,32 @@
   margin-top: 0.75rem;
 }
 
+.portal__comments {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--portal-border);
+}
+
+.portal__comments .ec-comments-heading {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.portal__comments .ec-comment-form {
+  margin-top: 1.25rem;
+}
+
+/* ponytail: 投稿APIはメール必須。画面は名前とコメントだけ。連絡先が要るならこの非表示を外す。 */
+.portal__comments label:has(input[name="authorEmail"]),
+.portal__comments .ec-comment-user-email {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
 /* 閲覧ページだけ。EmDash はログイン中の編集者向けに全 HTML へピルを差し込む。管理画面は /_emdash で別ドキュメント。 */
 body:has(.portal__diary) #emdash-toolbar,
 body:has(.portal__diary) #emdash-toolbar-bootstrap {

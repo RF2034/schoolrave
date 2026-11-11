@@ -1,8 +1,10 @@
 ---
+import { env } from "cloudflare:workers";
 import Portal from "@/layouts/Portal.astro";
 import { formatDate } from "@/lib/portal-format";
 import { getEmDashEntry } from "emdash";
 import { PortableText } from "emdash/ui";
+import { CommentForm, Comments } from "emdash/ui/comments";
 
 export const prerender = false;
 
@@ -17,6 +19,27 @@ const authors = entry?.data.bylines ?? [];
 const name = typeof entry?.data.name === "string" ? entry.data.name.trim() : "";
 const group =
   typeof entry?.data.kumi === "string" ? entry.data.kumi.trim() : "";
+
+// ponytail: seed の再適用は承認設定を書かない。公開ページに EmDash の db は無いので、D1 を直接一度だけ更新する。
+if (entry && "DB" in env && env.DB) {
+  try {
+    await env.DB.prepare(
+      `UPDATE _emdash_collections
+       SET comments_enabled = 1, comments_moderation = 'none'
+       WHERE slug = 'diary'
+         AND (comments_enabled <> 1 OR comments_moderation <> 'none')`,
+    ).run();
+  } catch (error) {
+    console.error("[diary] comment settings update failed", error);
+  }
+}
+
+const commentLabels = {
+  heading: (count: number) =>
+    count === 0 ? "コメントはまだありません" : `コメント ${count}件`,
+  like: "いいね",
+  member: "メンバー",
+};
 ---
 
 <Portal
@@ -53,6 +76,30 @@ const group =
           <div class="portal__prose">
             <PortableText value={entry.data.body} />
           </div>
+          <div class="portal__comments">
+            <Comments
+              collection="diary"
+              contentId={entry.id}
+              reactions
+              locale="ja-JP"
+              labels={commentLabels}
+            />
+            <CommentForm
+              collection="diary"
+              contentId={entry.id}
+              labels={{
+                name: "名前",
+                email: "メールアドレス",
+                comment: "コメント",
+                submit: "コメントを送る",
+                submitting: "送信しています",
+                published: "コメントを公開しました",
+                pending: "コメントを受け付けました",
+                error: "コメントを送れませんでした。",
+                networkError: "通信に失敗しました。もう一度試してください。",
+              }}
+            />
+          </div>
         </article>
       ) : (
         <section class="portal__section">
@@ -66,3 +113,32 @@ const group =
     }
   </div>
 </Portal>
+
+<script is:inline>
+  const commentEmail = "comment@schoolrave.net";
+  for (const form of document.querySelectorAll("[data-ec-comment-form]")) {
+    const email = form.querySelector('input[name="authorEmail"]');
+    if (!(email instanceof HTMLInputElement)) continue;
+    email.value = commentEmail;
+    email.tabIndex = -1;
+    email.closest("label")?.setAttribute("aria-hidden", "true");
+  }
+
+  document.addEventListener("submit", (event) => {
+    const form = event.target;
+    if (
+      !(form instanceof HTMLFormElement) ||
+      !form.matches("[data-ec-comment-form]")
+    ) {
+      return;
+    }
+    const status = form.querySelector(".ec-comment-form-status");
+    if (!status) return;
+    const observer = new MutationObserver(() => {
+      if (!status.classList.contains("ec-comment-form-success")) return;
+      observer.disconnect();
+      location.reload();
+    });
+    observer.observe(status, { attributes: true, attributeFilter: ["class"] });
+  });
+</script>
