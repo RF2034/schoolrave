@@ -76,6 +76,21 @@ const commentLabels = {
           <div class="portal__prose">
             <PortableText value={entry.data.body} />
           </div>
+          <div class="portal__reacts" data-target={entry.id}>
+            <p class="portal__reacts-label">スタンプ</p>
+            {REACTIONS.map((choice) => (
+              <button
+                type="button"
+                class="portal__react"
+                data-emoji={choice.emoji}
+                aria-pressed="false"
+                aria-label={choice.label}
+              >
+                <span aria-hidden="true">{choice.emoji}</span>
+                <span data-count="0" />
+              </button>
+            ))}
+          </div>
           <div class="portal__comments">
             <Comments
               collection="diary"
@@ -112,12 +127,6 @@ const commentLabels = {
     }
   </div>
 </Portal>
-
-<script
-  id="diary-reaction-choices"
-  type="application/json"
-  set:html={JSON.stringify(REACTIONS)}
-/>
 
 <script is:inline>
   const commentEmail = "comment@schoolrave.net";
@@ -171,45 +180,16 @@ const commentLabels = {
     observer.observe(status, { attributes: true, attributeFilter: ["class"] });
   });
 
-  const choiceNode = document.getElementById("diary-reaction-choices");
-  const choices = choiceNode ? JSON.parse(choiceNode.textContent || "[]") : [];
-  const comments = [
-    ...document.querySelectorAll(".ec-comment[data-comment-id]"),
-  ];
-  const ids = [];
-  for (const comment of comments) {
-    const id = comment.getAttribute("data-comment-id");
-    if (!id) continue;
-    ids.push(id);
-    const bar = document.createElement("div");
-    bar.className = "portal__reacts";
-    const caption = document.createElement("p");
-    caption.className = "portal__reacts-label";
-    caption.textContent = "スタンプ";
-    bar.append(caption);
-    for (const choice of choices) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "portal__react";
-      button.dataset.emoji = choice.emoji;
-      button.setAttribute("aria-pressed", "false");
-      button.setAttribute("aria-label", choice.label);
-      const icon = document.createElement("span");
-      icon.setAttribute("aria-hidden", "true");
-      icon.textContent = choice.emoji;
-      const count = document.createElement("span");
-      count.dataset.count = "0";
-      button.append(icon, count);
-      bar.append(button);
-    }
-    comment.append(bar);
-  }
+  const bars = [...document.querySelectorAll(".portal__reacts[data-target]")];
+  const ids = bars
+    .map((bar) => bar.getAttribute("data-target"))
+    .filter((id) => id);
 
-  function paint(comment, payload) {
-    const id = comment.getAttribute("data-comment-id");
+  function paint(bar, payload) {
+    const id = bar.getAttribute("data-target");
     const counts = (payload.counts && payload.counts[id]) || {};
     const mine = new Set((payload.mine && payload.mine[id]) || []);
-    for (const button of comment.querySelectorAll(".portal__react")) {
+    for (const button of bar.querySelectorAll(".portal__react")) {
       const emoji = button.dataset.emoji;
       const n = Number(counts[emoji] || 0);
       const count = button.querySelector("[data-count]");
@@ -226,7 +206,7 @@ const commentLabels = {
       .then((response) => (response.ok ? response.json() : null))
       .then((payload) => {
         if (!payload) return;
-        for (const comment of comments) paint(comment, payload);
+        for (const bar of bars) paint(bar, payload);
       })
       .catch(() => {});
   }
@@ -236,10 +216,10 @@ const commentLabels = {
     if (!(target instanceof Element)) return;
     const button = target.closest(".portal__react");
     if (!button) return;
-    const comment = button.closest(".ec-comment");
-    const commentId = comment?.getAttribute("data-comment-id");
+    const bar = button.closest(".portal__reacts");
+    const commentId = bar?.getAttribute("data-target");
     const emoji = button.dataset.emoji;
-    if (!comment || !commentId || !emoji) return;
+    if (!bar || !commentId || !emoji) return;
     button.disabled = true;
     fetch("/portal/diary/reactions", {
       method: "POST",
@@ -248,7 +228,7 @@ const commentLabels = {
     })
       .then((response) => (response.ok ? response.json() : null))
       .then((payload) => {
-        if (payload) paint(comment, payload);
+        if (payload) paint(bar, payload);
       })
       .catch(() => {})
       .finally(() => {

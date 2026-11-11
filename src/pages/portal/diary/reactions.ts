@@ -132,7 +132,16 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     )
     .bind(commentId)
     .first<{ id: string }>();
-  if (!comment) return json({ error: "missing" }, 404);
+  const article = comment
+    ? null
+    : await db()
+        .prepare(
+          `SELECT id FROM ec_diary
+           WHERE id = ? AND deleted_at IS NULL AND status = 'published'`,
+        )
+        .bind(commentId)
+        .first<{ id: string }>();
+  if (!comment && !article) return json({ error: "missing" }, 404);
 
   const voter = voterId(cookies, url.protocol === "https:");
   const existing = await db()
