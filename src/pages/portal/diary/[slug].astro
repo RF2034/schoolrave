@@ -16,6 +16,10 @@ if (!entry) {
   Astro.response.status = 404;
 }
 
+const contentId =
+  entry && typeof entry.data.id === "string" && entry.data.id.trim()
+    ? entry.data.id.trim()
+    : (entry?.id ?? "");
 const authors = entry?.data.bylines ?? [];
 const name = typeof entry?.data.name === "string" ? entry.data.name.trim() : "";
 const group =
@@ -26,9 +30,13 @@ if (entry && "DB" in env && env.DB) {
   try {
     await env.DB.prepare(
       `UPDATE _emdash_collections
-       SET comments_enabled = 1, comments_moderation = 'none'
+       SET comments_enabled = 1,
+           comments_moderation = 'none',
+           comments_closed_after_days = 0
        WHERE slug = 'diary'
-         AND (comments_enabled <> 1 OR comments_moderation <> 'none')`,
+         AND (comments_enabled <> 1
+           OR comments_moderation <> 'none'
+           OR comments_closed_after_days <> 0)`,
     ).run();
   } catch (error) {
     console.error("[diary] comment settings update failed", error);
@@ -76,7 +84,7 @@ const commentLabels = {
           <div class="portal__prose">
             <PortableText value={entry.data.body} />
           </div>
-          <div class="portal__reacts" data-target={entry.id}>
+          <div class="portal__reacts" data-target={contentId}>
             <p class="portal__reacts-label">スタンプ</p>
             {REACTIONS.map((choice) => (
               <button
@@ -94,13 +102,13 @@ const commentLabels = {
           <div class="portal__comments">
             <Comments
               collection="diary"
-              contentId={entry.id}
+              contentId={contentId}
               locale="ja-JP"
               labels={commentLabels}
             />
             <CommentForm
               collection="diary"
-              contentId={entry.id}
+              contentId={contentId}
               labels={{
                 name: "名前",
                 email: "メールアドレス",
