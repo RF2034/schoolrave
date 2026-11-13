@@ -29,6 +29,16 @@ export default defineConfig({
         defaultRole: 30,
       }),
       middleware: { outer: "./src/middleware/admin-view-site.ts" },
+      plugins: [
+        {
+          id: "diary-discord",
+          version: "1.0.0",
+          format: "standard",
+          entrypoint: "@/lib/diary-discord-plugin.ts",
+          capabilities: ["content:read"],
+          hooks: ["content:afterPublish"],
+        },
+      ],
     }),
   ],
   redirects: {
