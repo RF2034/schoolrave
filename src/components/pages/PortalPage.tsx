@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { TIMETABLE_SHEET_URL, type TimetableView } from "@/lib/timetable";
 
 const RUNDOWN_SHEET_URL =
   "https://docs.google.com/spreadsheets/d/1O6Pl5W10lLasni7azFAHcyKXQNZsM91ufCCVIGrvm6Q/edit?usp=sharing";
@@ -146,7 +147,74 @@ function ExternalLinkIcon() {
   );
 }
 
-export default function PortalPage() {
+function slotTime(start: string, end: string) {
+  if (start && end) return `${start}–${end}`;
+  return start || end;
+}
+
+function TimetableSection({ timetable }: { timetable: TimetableView }) {
+  return (
+    <section
+      id="timetable"
+      className="portal__section"
+      aria-labelledby="timetable-heading"
+    >
+      <h2 id="timetable-heading" className="portal__section-title">
+        タイムテーブル
+      </h2>
+      <p className="portal__note">
+        <ExternalLink href={TIMETABLE_SHEET_URL}>
+          スプレッドシートを開く
+        </ExternalLink>
+      </p>
+      {timetable.error ? (
+        <p className="portal__empty">{timetable.error}</p>
+      ) : timetable.days.length === 0 ? (
+        <p className="portal__empty">まだ行がありません。</p>
+      ) : (
+        timetable.days.map((day) => (
+          <article className="portal__tt-day" key={day.day}>
+            <h3 className="portal__tt-day-title">{day.day}</h3>
+            <div className="portal__tt-floors">
+              {day.floors.map((floor) => (
+                <div className="portal__tt-floor" key={floor.floor}>
+                  <h4 className="portal__tt-floor-title">{floor.floor}</h4>
+                  <ol className="portal__tt-list">
+                    {floor.slots.map((slot, index) => {
+                      const time = slotTime(slot.start, slot.end);
+                      return (
+                        <li
+                          className="portal__tt-slot"
+                          key={`${time}-${index}`}
+                        >
+                          {time ? (
+                            <span className="portal__tt-time">{time}</span>
+                          ) : null}
+                          <span className="portal__tt-name">
+                            {slot.name || "（未定）"}
+                          </span>
+                          {slot.note ? (
+                            <span className="portal__tt-note">{slot.note}</span>
+                          ) : null}
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              ))}
+            </div>
+          </article>
+        ))
+      )}
+    </section>
+  );
+}
+
+export default function PortalPage({
+  timetable,
+}: {
+  timetable: TimetableView;
+}) {
   return (
     <div className="portal__inner">
       <header className="portal__header">
@@ -258,6 +326,8 @@ export default function PortalPage() {
             </ul>
           </div>
         </section>
+
+        <TimetableSection timetable={timetable} />
 
         <section
           id="schedule"

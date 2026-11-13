@@ -138,6 +138,67 @@
   font-size: 0.9375rem;
 }
 
+.portal__tt-day {
+  margin-top: 1.15rem;
+}
+
+.portal__tt-day-title {
+  margin: 0 0 0.55rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.portal__tt-floors {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.portal__tt-floor {
+  margin: 0;
+  padding: 0.75rem 0.85rem 0.85rem;
+  background: var(--portal-bg);
+}
+
+.portal__tt-floor-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.portal__tt-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portal__tt-slot + .portal__tt-slot {
+  margin-top: 0.55rem;
+}
+
+.portal__tt-time {
+  display: block;
+  color: var(--portal-muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+.portal__tt-name {
+  font-weight: 700;
+}
+
+.portal__tt-note {
+  margin-left: 0.45rem;
+  color: var(--portal-muted);
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .portal__tt-floors {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .portal__section--sheet {
   width: min(96vw, 80rem);
   margin-left: calc(50% - min(48vw, 40rem));

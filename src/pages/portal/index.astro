@@ -1,12 +1,15 @@
 ---
 import PortalPage from "@/components/pages/PortalPage";
 import Portal from "@/layouts/Portal.astro";
+import { loadTimetable } from "@/lib/timetable";
 
-export const prerender = true;
+export const prerender = false;
+
+const timetable = await loadTimetable();
 ---
 
 <Portal>
-  <PortalPage />
+  <PortalPage timetable={timetable} />
 </Portal>
 
 <script>
