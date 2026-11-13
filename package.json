@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/use-typed-comment-name.mjs && astro build",
     "start": "astro preview",
     "preview": "astro preview",
     "lint": "eslint .",

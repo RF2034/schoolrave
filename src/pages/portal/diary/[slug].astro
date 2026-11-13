@@ -1,8 +1,11 @@
 ---
+import { env } from "cloudflare:workers";
 import Portal from "@/layouts/Portal.astro";
+import { REACTIONS } from "@/lib/diary-reactions";
 import { formatDate } from "@/lib/portal-format";
 import { getEmDashEntry } from "emdash";
 import { PortableText } from "emdash/ui";
+import { CommentForm, Comments } from "emdash/ui/comments";
 
 export const prerender = false;
 
@@ -13,10 +16,38 @@ if (!entry) {
   Astro.response.status = 404;
 }
 
+const contentId =
+  entry && typeof entry.data.id === "string" && entry.data.id.trim()
+    ? entry.data.id.trim()
+    : (entry?.id ?? "");
 const authors = entry?.data.bylines ?? [];
 const name = typeof entry?.data.name === "string" ? entry.data.name.trim() : "";
 const group =
   typeof entry?.data.kumi === "string" ? entry.data.kumi.trim() : "";
+
+// ponytail: seed の再適用は承認設定を書かない。公開ページに EmDash の db は無いので、D1 を直接一度だけ更新する。
+if (entry && "DB" in env && env.DB) {
+  try {
+    await env.DB.prepare(
+      `UPDATE _emdash_collections
+       SET comments_enabled = 1,
+           comments_moderation = 'none',
+           comments_closed_after_days = 0
+       WHERE slug = 'diary'
+         AND (comments_enabled <> 1
+           OR comments_moderation <> 'none'
+           OR comments_closed_after_days <> 0)`,
+    ).run();
+  } catch (error) {
+    console.error("[diary] comment settings update failed", error);
+  }
+}
+
+const commentLabels = {
+  heading: (count: number) =>
+    count === 0 ? "コメントはまだありません" : `コメント ${count}件`,
+  member: "メンバー",
+};
 ---
 
 <Portal
@@ -53,6 +84,44 @@ const group =
           <div class="portal__prose">
             <PortableText value={entry.data.body} />
           </div>
+          <div class="portal__reacts" data-target={contentId}>
+            <p class="portal__reacts-label">スタンプ</p>
+            {REACTIONS.map((choice) => (
+              <button
+                type="button"
+                class="portal__react"
+                data-emoji={choice.emoji}
+                aria-pressed="false"
+                aria-label={choice.label}
+              >
+                <span aria-hidden="true">{choice.emoji}</span>
+                <span data-count="0" />
+              </button>
+            ))}
+          </div>
+          <div class="portal__comments">
+            <Comments
+              collection="diary"
+              contentId={contentId}
+              locale="ja-JP"
+              labels={commentLabels}
+            />
+            <CommentForm
+              collection="diary"
+              contentId={contentId}
+              labels={{
+                name: "名前",
+                email: "メールアドレス",
+                comment: "コメント",
+                submit: "コメントを送る",
+                submitting: "送信しています",
+                published: "コメントを公開しました",
+                pending: "コメントを受け付けました",
+                error: "コメントを送れませんでした。",
+                networkError: "通信に失敗しました。もう一度試してください。",
+              }}
+            />
+          </div>
         </article>
       ) : (
         <section class="portal__section">
@@ -66,3 +135,112 @@ const group =
     }
   </div>
 </Portal>
+
+<script is:inline>
+  const commentEmail = "comment@schoolrave.net";
+  for (const form of document.querySelectorAll("[data-ec-comment-form]")) {
+    form.dataset.userName = "";
+    const locked = form.querySelector(".ec-comment-user-info");
+    if (locked) {
+      const label = document.createElement("label");
+      label.className = "ec-comment-form-field";
+      const caption = document.createElement("span");
+      caption.textContent = "名前";
+      const name = document.createElement("input");
+      name.type = "text";
+      name.name = "authorName";
+      name.required = true;
+      name.maxLength = 100;
+      name.autocomplete = "off";
+      name.placeholder = "名前を入力";
+      label.append(caption, name);
+      locked.replaceWith(label);
+    }
+    const name = form.querySelector('input[name="authorName"]');
+    if (name instanceof HTMLInputElement) {
+      name.value = "";
+      name.readOnly = false;
+      name.autocomplete = "off";
+      name.placeholder = "名前を入力";
+    }
+    const email = form.querySelector('input[name="authorEmail"]');
+    if (!(email instanceof HTMLInputElement)) continue;
+    email.value = commentEmail;
+    email.tabIndex = -1;
+    email.closest("label")?.setAttribute("aria-hidden", "true");
+  }
+
+  document.addEventListener("submit", (event) => {
+    const form = event.target;
+    if (
+      !(form instanceof HTMLFormElement) ||
+      !form.matches("[data-ec-comment-form]")
+    ) {
+      return;
+    }
+    const status = form.querySelector(".ec-comment-form-status");
+    if (!status) return;
+    const observer = new MutationObserver(() => {
+      if (!status.classList.contains("ec-comment-form-success")) return;
+      observer.disconnect();
+      location.reload();
+    });
+    observer.observe(status, { attributes: true, attributeFilter: ["class"] });
+  });
+
+  const bars = [...document.querySelectorAll(".portal__reacts[data-target]")];
+  const ids = bars
+    .map((bar) => bar.getAttribute("data-target"))
+    .filter((id) => id);
+
+  function paint(bar, payload) {
+    const id = bar.getAttribute("data-target");
+    const counts = (payload.counts && payload.counts[id]) || {};
+    const mine = new Set((payload.mine && payload.mine[id]) || []);
+    for (const button of bar.querySelectorAll(".portal__react")) {
+      const emoji = button.dataset.emoji;
+      const n = Number(counts[emoji] || 0);
+      const count = button.querySelector("[data-count]");
+      if (count) {
+        count.textContent = n > 0 ? String(n) : "";
+        count.dataset.count = String(n);
+      }
+      button.setAttribute("aria-pressed", mine.has(emoji) ? "true" : "false");
+    }
+  }
+
+  if (ids.length > 0) {
+    fetch("/portal/diary/reactions?ids=" + encodeURIComponent(ids.join(",")))
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        if (!payload) return;
+        for (const bar of bars) paint(bar, payload);
+      })
+      .catch(() => {});
+  }
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest(".portal__react");
+    if (!button) return;
+    const bar = button.closest(".portal__reacts");
+    const commentId = bar?.getAttribute("data-target");
+    const emoji = button.dataset.emoji;
+    if (!bar || !commentId || !emoji) return;
+    button.disabled = true;
+    fetch("/portal/diary/reactions", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ commentId, emoji }),
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((payload) => {
+        if (payload) paint(bar, payload);
+      })
+      .catch(() => {})
+      .finally(() => {
+        button.disabled = false;
+      });
+  });
+</script>

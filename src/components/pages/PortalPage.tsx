@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { TIMETABLE_SHEET_URL, type TimetableView } from "@/lib/timetable";
 
 const RUNDOWN_SHEET_URL =
   "https://docs.google.com/spreadsheets/d/1O6Pl5W10lLasni7azFAHcyKXQNZsM91ufCCVIGrvm6Q/edit?usp=sharing";
@@ -22,12 +23,11 @@ const DRIVE_TREE = `ガッコウレイヴ2026/
 │   └── 各ロール/
 └── その他/`;
 
-const SUBMISSIONS = [
+const TASKS = [
   {
-    title: "アクティビティ企画募集",
-    deadline: "無し",
-    href: "https://docs.google.com/forms/d/e/1FAIpQLSf3xvnQXdUQERvIjSYixsQjWn5B4Y1hxqoyueYP25heQSaydA/viewform?usp=dialog",
-    linkLabel: "Googleフォーム",
+    id: "profile-book",
+    name: "プロフィール帳作成",
+    href: "https://canva.link/gyidblgyyn1uyyi",
   },
 ] as const;
 
@@ -147,7 +147,74 @@ function ExternalLinkIcon() {
   );
 }
 
-export default function PortalPage() {
+function slotTime(start: string, end: string) {
+  if (start && end) return `${start}–${end}`;
+  return start || end;
+}
+
+function TimetableSection({ timetable }: { timetable: TimetableView }) {
+  return (
+    <section
+      id="timetable"
+      className="portal__section"
+      aria-labelledby="timetable-heading"
+    >
+      <h2 id="timetable-heading" className="portal__section-title">
+        タイムテーブル
+      </h2>
+      <p className="portal__note">
+        <ExternalLink href={TIMETABLE_SHEET_URL}>
+          スプレッドシートを開く
+        </ExternalLink>
+      </p>
+      {timetable.error ? (
+        <p className="portal__empty">{timetable.error}</p>
+      ) : timetable.days.length === 0 ? (
+        <p className="portal__empty">まだ行がありません。</p>
+      ) : (
+        timetable.days.map((day) => (
+          <article className="portal__tt-day" key={day.day}>
+            <h3 className="portal__tt-day-title">{day.day}</h3>
+            <div className="portal__tt-floors">
+              {day.floors.map((floor) => (
+                <div className="portal__tt-floor" key={floor.floor}>
+                  <h4 className="portal__tt-floor-title">{floor.floor}</h4>
+                  <ol className="portal__tt-list">
+                    {floor.slots.map((slot, index) => {
+                      const time = slotTime(slot.start, slot.end);
+                      return (
+                        <li
+                          className="portal__tt-slot"
+                          key={`${time}-${index}`}
+                        >
+                          {time ? (
+                            <span className="portal__tt-time">{time}</span>
+                          ) : null}
+                          <span className="portal__tt-name">
+                            {slot.name || "（未定）"}
+                          </span>
+                          {slot.note ? (
+                            <span className="portal__tt-note">{slot.note}</span>
+                          ) : null}
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              ))}
+            </div>
+          </article>
+        ))
+      )}
+    </section>
+  );
+}
+
+export default function PortalPage({
+  timetable,
+}: {
+  timetable: TimetableView;
+}) {
   return (
     <div className="portal__inner">
       <header className="portal__header">
@@ -194,6 +261,7 @@ export default function PortalPage() {
           id="packing"
           className="portal__section"
           aria-labelledby="packing-heading"
+          data-check-group="持ち物"
         >
           <h2 id="packing-heading" className="portal__section-title">
             持ち物チェックリスト
@@ -240,31 +308,26 @@ export default function PortalPage() {
           <h2 id="submissions-heading" className="portal__section-title">
             提出物・入力一覧
           </h2>
-          <div className="portal__table-wrap">
-            <table className="portal__table">
-              <thead>
-                <tr>
-                  <th scope="col">内容</th>
-                  <th scope="col">締切</th>
-                  <th scope="col">入力先</th>
-                </tr>
-              </thead>
-              <tbody>
-                {SUBMISSIONS.map((item) => (
-                  <tr key={item.title}>
-                    <td data-label="内容">{item.title}</td>
-                    <td data-label="締切">{item.deadline}</td>
-                    <td data-label="入力先">
-                      <ExternalLink href={item.href}>
-                        {item.linkLabel}
-                      </ExternalLink>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="portal__packing-group" data-check-group="提出物">
+            <ul className="portal__packing-list">
+              {TASKS.map((item) => (
+                <li className="portal__packing-item" key={item.id}>
+                  <label className="portal__packing-label">
+                    <input
+                      className="portal__packing-check"
+                      type="checkbox"
+                      data-task-id={item.id}
+                    />
+                    <span className="portal__packing-box" aria-hidden="true" />
+                    <ExternalLink href={item.href}>{item.name}</ExternalLink>
+                  </label>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
+
+        <TimetableSection timetable={timetable} />
 
         <section
           id="schedule"
@@ -274,9 +337,6 @@ export default function PortalPage() {
           <h2 id="schedule-heading" className="portal__section-title">
             香盤表
           </h2>
-          <p className="portal__note portal__note--tight">
-            スプレッドシートの内容を表示しています。編集は元のシートで行います。
-          </p>
           <p className="portal__note">
             <ExternalLink href={RUNDOWN_SHEET_URL}>
               スプレッドシートを開く
@@ -297,9 +357,6 @@ export default function PortalPage() {
           <h2 id="venue-heading" className="portal__section-title">
             会場見取り図
           </h2>
-          <p className="portal__note portal__note--tight">
-            スプレッドシートの内容を表示しています。編集は元のシートで行います。
-          </p>
           <p className="portal__note">
             <ExternalLink href={VENUE_SHEET_URL}>
               スプレッドシートを開く
@@ -331,6 +388,8 @@ export default function PortalPage() {
           </pre>
         </section>
       </main>
+
+      <p id="portal-celebrate" className="portal__sr-only" aria-live="polite" />
 
       <footer className="portal__footer">
         <p>機密情報は掲載しません。必要な共有はドライブ経由で行います。</p>
