@@ -36,7 +36,7 @@ export default defineConfig({
           format: "standard",
           entrypoint: "@/lib/diary-discord-plugin.ts",
           capabilities: ["content:read"],
-          hooks: ["content:afterPublish"],
+          hooks: ["content:afterPublish", "content:afterUnpublish"],
         },
       ],
     }),

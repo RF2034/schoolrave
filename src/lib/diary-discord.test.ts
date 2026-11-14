@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { diaryDiscordPayload, nextDiaryMention } from "./diary-discord.ts";
+import {
+  diaryDiscordPayload,
+  diaryPublishNotice,
+  nextDiaryMention,
+} from "./diary-discord.ts";
 
 test("同じ組の次の人を指す。最後は先頭に戻る", () => {
   assert.equal(nextDiaryMention("1組", "うさえ"), "624628070414024717");
@@ -46,4 +50,45 @@ test("通知は次の人だけを鳴らせる", () => {
   assert.deepEqual(quiet.allowed_mentions.users, []);
   assert.equal(quiet.content.includes("<@"), false);
   assert.match(quiet.content, /https:\/\/schoolrave\.net\/portal\/diary$/);
+});
+
+test("通知は初回公開と、非公開から戻した再公開だけ", () => {
+  const published = "2026-11-14T09:20:00.000Z";
+  const edited = "2026-11-14T09:25:00.000Z";
+  assert.equal(
+    diaryPublishNotice({
+      mark: null,
+      publishedAt: published,
+      updatedAt: published,
+    }),
+    "send",
+  );
+  assert.equal(
+    diaryPublishNotice({
+      mark: null,
+      publishedAt: published,
+      updatedAt: edited,
+    }),
+    "seal",
+  );
+  assert.equal(
+    diaryPublishNotice({
+      mark: "sent",
+      publishedAt: published,
+      updatedAt: edited,
+    }),
+    "skip",
+  );
+  assert.equal(
+    diaryPublishNotice({
+      mark: "armed",
+      publishedAt: published,
+      updatedAt: edited,
+    }),
+    "send",
+  );
+  assert.equal(
+    diaryPublishNotice({ mark: null, publishedAt: "", updatedAt: edited }),
+    "send",
+  );
 });

@@ -95,3 +95,32 @@ export function diaryDiscordPayload(input: {
     allowed_mentions: { parse: [], users: userId ? [userId] : [] },
   };
 }
+
+/** sent: この公開は通知済み。armed: 非公開に戻したので次の公開で通知する。 */
+export type DiaryNoticeMark = "sent" | "armed";
+
+/**
+ * 通知を出すか。
+ * 記録が無く、公開日時が更新日時より前なら、公開済み記事の編集なので出さない。
+ * 非公開にしてから再公開した場合は armed が付いているので出す。
+ */
+export function diaryPublishNotice(input: {
+  mark: DiaryNoticeMark | null;
+  publishedAt: string;
+  updatedAt: string;
+}): "send" | "seal" | "skip" {
+  if (input.mark === "sent") return "skip";
+  if (input.mark === "armed") return "send";
+  if (publishedBeforeUpdate(input.publishedAt, input.updatedAt)) return "seal";
+  return "send";
+}
+
+function publishedBeforeUpdate(
+  publishedAt: string,
+  updatedAt: string,
+): boolean {
+  const published = Date.parse(publishedAt);
+  const updated = Date.parse(updatedAt);
+  if (Number.isNaN(published) || Number.isNaN(updated)) return false;
+  return published < updated;
+}
