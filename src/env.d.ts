@@ -5,5 +5,6 @@ declare namespace Cloudflare {
     DB: {
       prepare(query: string): { run(): Promise<unknown> };
     };
+    DISCORD_DIARY_WEBHOOK_URL?: string;
   }
 }
