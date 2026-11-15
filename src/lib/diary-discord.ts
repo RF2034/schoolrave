@@ -8,6 +8,7 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
     { names: ["Neruyo"], userId: "624628070414024717" },
     { names: ["しゃげ"], userId: "523095960050597889" },
     { names: ["よほた"], userId: "559009226618437642" },
+    { names: ["てれ", "Telepath"], userId: "386883728099639298" },
   ],
   "2組": [
     { names: ["SUGACHAN", "༒༽ SUGACHAN༼༒"], userId: "493664722118377474" },
@@ -51,6 +52,7 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
     { names: ["kaki0121"], userId: "707236648781480069" },
     { names: ["正宗"], userId: "249160824944328706" },
     { names: ["オガ@Nero"], userId: "737280113229693020" },
+    { names: ["シンジ"], userId: "708071973099536396" },
   ],
 };
 
