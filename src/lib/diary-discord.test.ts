@@ -15,8 +15,12 @@ test("同じ組の次の人を指す。最後は先頭に戻る", () => {
     "992361066732453938",
   );
   assert.equal(nextDiaryMention("2組", "sugachan"), "992361066732453938");
+  assert.equal(nextDiaryMention("2組", "さば"), "307163554279194625");
   assert.equal(nextDiaryMention("5組", "twoway"), "235021051128446976");
+  assert.equal(nextDiaryMention("5組", "メジ"), "477111503548579843");
   assert.equal(nextDiaryMention("6組", "きゅーまる"), "438334362191134730");
+  assert.equal(nextDiaryMention("5組", "あ"), null);
+  assert.equal(nextDiaryMention("1組", "twoway"), null);
   assert.equal(nextDiaryMention("5組", "メジェド"), "477111503548579843");
   assert.equal(nextDiaryMention("5組", " メジエド "), "477111503548579843");
   assert.equal(nextDiaryMention("6組", "オガ@Nero"), "366867831184424973");

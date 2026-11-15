@@ -39,13 +39,13 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
   "5組": [
     { names: ["まーぴょん"], userId: "477111503548579843" },
     { names: ["あお"], userId: "1271668648137855039" },
-    { names: ["twoway15", "twoway"], userId: "727459210589372467" },
+    { names: ["twoway15"], userId: "727459210589372467" },
     { names: ["三角", "🔺三角🔺"], userId: "235021051128446976" },
     { names: ["そるびー"], userId: "552713578772430848" },
     { names: ["メジェド", "メジエド"], userId: "471601317853397003" },
   ],
   "6組": [
-    { names: ["きゅーまるさま", "きゅーまる"], userId: "366867831184424973" },
+    { names: ["きゅーまるさま"], userId: "366867831184424973" },
     { names: ["MTTS", "みっちゃん"], userId: "438334362191134730" },
     { names: ["ひろろく"], userId: "508608221632659466" },
     { names: ["kaki0121"], userId: "707236648781480069" },
@@ -60,16 +60,27 @@ export function normalizeDiaryName(value: string): string {
   return value.normalize("NFKC").trim().toLowerCase();
 }
 
-/** 同じ組の次の人。名前が表に無ければ null。組をまたがない。 */
+function nameOverlaps(alias: string, key: string): boolean {
+  const name = normalizeDiaryName(alias);
+  if (!name || !key) return false;
+  if (name === key) return true;
+  const short = name.length < key.length ? name : key;
+  if ([...short].length < 2) return false;
+  return name.includes(key) || key.includes(name);
+}
+
+/** 同じ組の次の人。投稿名が表の名前を含めばその人。組をまたがない。複数人に当たれば null。 */
 export function nextDiaryMention(kumi: string, name: string): string | null {
   const group = ROTATION[kumi.trim()];
   if (!group) return null;
   const key = normalizeDiaryName(name);
   if (!key) return null;
-  const index = group.findIndex((person) =>
-    person.names.some((alias) => normalizeDiaryName(alias) === key),
+  const hits = group.filter((person) =>
+    person.names.some((alias) => nameOverlaps(alias, key)),
   );
-  if (index < 0) return null;
+  // ponytail: 組内で二人以上に部分一致したら飛ばさない。包含が交差したら別名を分ける。
+  if (hits.length !== 1) return null;
+  const index = group.indexOf(hits[0]);
   return group[(index + 1) % group.length].userId;
 }
 
