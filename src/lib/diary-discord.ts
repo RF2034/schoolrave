@@ -39,13 +39,13 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
   "5組": [
     { names: ["まーぴょん"], userId: "477111503548579843" },
     { names: ["あお"], userId: "1271668648137855039" },
-    { names: ["twoway15"], userId: "727459210589372467" },
+    { names: ["twoway15", "twoway"], userId: "727459210589372467" },
     { names: ["三角", "🔺三角🔺"], userId: "235021051128446976" },
     { names: ["そるびー"], userId: "552713578772430848" },
     { names: ["メジェド", "メジエド"], userId: "471601317853397003" },
   ],
   "6組": [
-    { names: ["きゅーまるさま"], userId: "366867831184424973" },
+    { names: ["きゅーまるさま", "きゅーまる"], userId: "366867831184424973" },
     { names: ["MTTS", "みっちゃん"], userId: "438334362191134730" },
     { names: ["ひろろく"], userId: "508608221632659466" },
     { names: ["kaki0121"], userId: "707236648781480069" },
@@ -57,7 +57,7 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
 const SITE = "https://schoolrave.net";
 
 export function normalizeDiaryName(value: string): string {
-  return value.normalize("NFKC").trim();
+  return value.normalize("NFKC").trim().toLowerCase();
 }
 
 /** 同じ組の次の人。名前が表に無ければ null。組をまたがない。 */
