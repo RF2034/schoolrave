@@ -78,6 +78,7 @@ async function notify(content: Record<string, unknown>): Promise<void> {
   });
   if (!response.ok) {
     console.error("[diary-discord] webhook status", response.status);
+    throw new Error("webhook rejected");
   }
 }
 
@@ -85,7 +86,7 @@ export default {
   hooks: {
     "content:afterPublish": {
       errorPolicy: "continue" as const,
-      timeout: 10_000,
+      timeout: 30_000,
       handler: async (
         event: { collection: string; content: Record<string, unknown> },
         ctx: { kv: NoticeKv },

@@ -70,8 +70,8 @@ test("通知は次の人だけを鳴らせる", () => {
 });
 
 test("通知は初回公開と、非公開から戻した再公開だけ", () => {
-  const published = "2026-11-14T09:20:00.000Z";
-  const edited = "2026-11-14T09:25:00.000Z";
+  const published = "2026-11-13T09:20:00.000Z";
+  const edited = "2026-11-13T09:25:00.000Z";
   assert.equal(
     diaryPublishNotice({
       mark: null,
@@ -87,6 +87,14 @@ test("通知は初回公開と、非公開から戻した再公開だけ", () =>
       updatedAt: edited,
     }),
     "seal",
+  );
+  assert.equal(
+    diaryPublishNotice({
+      mark: null,
+      publishedAt: "2026-11-16T14:29:34.117Z",
+      updatedAt: "2026-11-16T15:00:00.000Z",
+    }),
+    "send",
   );
   assert.equal(
     diaryPublishNotice({

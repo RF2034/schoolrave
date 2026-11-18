@@ -112,9 +112,13 @@ export function diaryDiscordPayload(input: {
 /** sent: この公開は通知済み。armed: 非公開に戻したので次の公開で通知する。 */
 export type DiaryNoticeMark = "sent" | "armed";
 
+/** これより前の公開は、編集しても通知しない。通知を付けた日。 */
+export const DIARY_NOTICE_SINCE = "2026-11-14T00:00:00.000Z";
+
 /**
  * 通知を出すか。
- * 記録が無く、公開日時が更新日時より前なら、公開済み記事の編集なので出さない。
+ * 記録が無く、追跡開始前の記事で公開日時が更新日時より前なら、公開済みの編集なので出さない。
+ * 追跡開始後に印が無い記事は、公開処理が途中で落ちていても出す。
  * 非公開にしてから再公開した場合は armed が付いているので出す。
  */
 export function diaryPublishNotice(input: {
@@ -124,8 +128,20 @@ export function diaryPublishNotice(input: {
 }): "send" | "seal" | "skip" {
   if (input.mark === "sent") return "skip";
   if (input.mark === "armed") return "send";
-  if (publishedBeforeUpdate(input.publishedAt, input.updatedAt)) return "seal";
+  if (
+    !trackedPublish(input.publishedAt) &&
+    publishedBeforeUpdate(input.publishedAt, input.updatedAt)
+  ) {
+    return "seal";
+  }
   return "send";
+}
+
+function trackedPublish(publishedAt: string): boolean {
+  const published = Date.parse(publishedAt);
+  return (
+    !Number.isNaN(published) && published >= Date.parse(DIARY_NOTICE_SINCE)
+  );
 }
 
 function publishedBeforeUpdate(
