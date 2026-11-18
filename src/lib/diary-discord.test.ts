@@ -65,6 +65,13 @@ test("通知は次の人だけを鳴らせる", () => {
     name: "\u91d6(KTN)",
     slug: "",
   });
+  const sabamiso = diaryDiscordPayload({
+    title: "2組4番　さばみそ🐟️",
+    kumi: "2組",
+    name: "",
+    slug: "2組4番-さばみそ",
+  });
+  assert.deepEqual(sabamiso.allowed_mentions.users, ["307163554279194625"]);
   assert.deepEqual(quiet.allowed_mentions.users, []);
   assert.equal(quiet.content.includes("<@"), false);
   assert.match(quiet.content, /https:\/\/schoolrave\.net\/portal\/diary$/);

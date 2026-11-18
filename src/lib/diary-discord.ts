@@ -95,7 +95,7 @@ export function diaryDiscordPayload(input: {
   const title = input.title.replace(/\s+/g, " ").trim().slice(0, 200);
   const kumi = input.kumi.trim();
   const name = input.name.trim();
-  const userId = nextDiaryMention(kumi, name);
+  const userId = nextDiaryMention(kumi, name) ?? nextDiaryMention(kumi, title);
   const who = [kumi, name].filter(Boolean).join(" ");
   const head = who && title ? `${who}「${title}」` : who || title || "交換日記";
   const path = input.slug.trim()
