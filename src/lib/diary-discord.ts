@@ -144,6 +144,17 @@ function trackedPublish(publishedAt: string): boolean {
   );
 }
 
+/** 公開フックが落ちた記事。sent は送らない。追跡開始前の未通知も送らない。 */
+export function missedDiaryNotice(input: {
+  mark: DiaryNoticeMark | null;
+  publishedAt: string;
+  status: string;
+}): boolean {
+  if (input.status !== "published" || input.mark === "sent") return false;
+  if (input.mark === "armed") return true;
+  return trackedPublish(input.publishedAt);
+}
+
 function publishedBeforeUpdate(
   publishedAt: string,
   updatedAt: string,

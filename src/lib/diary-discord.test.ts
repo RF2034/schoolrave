@@ -3,6 +3,7 @@ import { test } from "node:test";
 import {
   diaryDiscordPayload,
   diaryPublishNotice,
+  missedDiaryNotice,
   nextDiaryMention,
 } from "./diary-discord.ts";
 
@@ -115,5 +116,48 @@ test("通知は初回公開と、非公開から戻した再公開だけ", () =>
   assert.equal(
     diaryPublishNotice({ mark: null, publishedAt: "", updatedAt: edited }),
     "send",
+  );
+});
+
+test("フックが落ちた追跡後の公開だけ、あとから送る", () => {
+  assert.equal(
+    missedDiaryNotice({
+      mark: null,
+      publishedAt: "2026-11-16T14:29:34.117Z",
+      status: "published",
+    }),
+    true,
+  );
+  assert.equal(
+    missedDiaryNotice({
+      mark: "sent",
+      publishedAt: "2026-11-16T14:29:34.117Z",
+      status: "published",
+    }),
+    false,
+  );
+  assert.equal(
+    missedDiaryNotice({
+      mark: null,
+      publishedAt: "2026-11-08T01:03:31.720Z",
+      status: "published",
+    }),
+    false,
+  );
+  assert.equal(
+    missedDiaryNotice({
+      mark: "armed",
+      publishedAt: "2026-11-08T01:03:31.720Z",
+      status: "published",
+    }),
+    true,
+  );
+  assert.equal(
+    missedDiaryNotice({
+      mark: null,
+      publishedAt: "2026-11-16T14:29:34.117Z",
+      status: "draft",
+    }),
+    false,
   );
 });

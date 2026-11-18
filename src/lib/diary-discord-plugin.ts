@@ -2,12 +2,33 @@ import { env } from "cloudflare:workers";
 import {
   diaryDiscordPayload,
   diaryPublishNotice,
+  missedDiaryNotice,
   type DiaryNoticeMark,
 } from "@/lib/diary-discord";
 
 type NoticeKv = {
   get(key: string): Promise<unknown>;
   set(key: string, value: unknown): Promise<void>;
+  list(prefix?: string): Promise<Array<{ key: string; value: unknown }>>;
+};
+
+type DiaryEntry = {
+  id: string;
+  slug: string | null;
+  status: string;
+  data: Record<string, unknown>;
+  publishedAt: string | null;
+  updatedAt: string;
+};
+
+type DiaryCtx = {
+  kv: NoticeKv;
+  content?: {
+    list(
+      collection: string,
+      options?: { limit?: number },
+    ): Promise<{ items: DiaryEntry[] }>;
+  };
 };
 
 function noticeKey(id: string): string {
@@ -60,7 +81,7 @@ function webhookUrl(): string | null {
 
 async function notify(content: Record<string, unknown>): Promise<void> {
   const url = webhookUrl();
-  if (!url) return;
+  if (!url) throw new Error("webhook missing");
   const data =
     content.data && typeof content.data === "object"
       ? (content.data as Record<string, unknown>)
@@ -82,6 +103,51 @@ async function notify(content: Record<string, unknown>): Promise<void> {
   }
 }
 
+function markOf(value: unknown): DiaryNoticeMark | null {
+  return value === "sent" || value === "armed" ? value : null;
+}
+
+async function sendMissed(ctx: DiaryCtx, exceptId: string): Promise<void> {
+  if (!ctx.content) return;
+  let items: DiaryEntry[];
+  let stored: Array<{ key: string; value: unknown }>;
+  try {
+    [{ items }, stored] = await Promise.all([
+      ctx.content.list("diary", { limit: 100 }),
+      ctx.kv.list("notice:"),
+    ]);
+  } catch {
+    console.error("[diary-discord] missed notices unreadable");
+    return;
+  }
+  const marks = new Map(
+    stored.map((entry) => [entry.key.slice("notice:".length), entry.value]),
+  );
+  for (const item of items) {
+    if (item.id === exceptId) continue;
+    if (
+      !missedDiaryNotice({
+        mark: markOf(marks.get(item.id)),
+        publishedAt: item.publishedAt ?? "",
+        status: item.status,
+      })
+    ) {
+      continue;
+    }
+    try {
+      await notify({
+        id: item.id,
+        slug: item.slug ?? "",
+        data: item.data,
+      });
+    } catch {
+      console.error("[diary-discord] notify failed");
+      continue;
+    }
+    await writeMark(ctx.kv, item.id, "sent");
+  }
+}
+
 export default {
   hooks: {
     "content:afterPublish": {
@@ -89,7 +155,7 @@ export default {
       timeout: 30_000,
       handler: async (
         event: { collection: string; content: Record<string, unknown> },
-        ctx: { kv: NoticeKv },
+        ctx: DiaryCtx,
       ) => {
         if (event.collection !== "diary") return;
         const id = text(event.content.id) || text(event.content.slug);
@@ -102,16 +168,20 @@ export default {
           publishedAt: text(event.content.publishedAt),
           updatedAt: text(event.content.updatedAt),
         });
-        if (decision === "skip") return;
+        let delivered = decision !== "send";
         if (decision === "send") {
           try {
             await notify(event.content);
+            await writeMark(ctx.kv, id, "sent");
+            delivered = true;
           } catch {
             console.error("[diary-discord] notify failed");
-            return;
           }
+        } else if (decision === "seal") {
+          await writeMark(ctx.kv, id, "sent");
         }
-        await writeMark(ctx.kv, id, "sent");
+        // ponytail: 公開100件まで。超えたら list の cursor で続きを見る。
+        await sendMissed(ctx, delivered ? id : "");
       },
     },
     "content:afterUnpublish": {
