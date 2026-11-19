@@ -28,6 +28,9 @@ test("同じ組の次の人を指す。最後は先頭に戻る", () => {
   assert.equal(nextDiaryMention("5組", " メジエド "), "477111503548579843");
   assert.equal(nextDiaryMention("6組", "オガ@Nero"), "708071973099536396");
   assert.equal(nextDiaryMention("6組", "シンジ"), "366867831184424973");
+  assert.equal(nextDiaryMention("7組", "Asamigori"), "1000058609457188944");
+  assert.equal(nextDiaryMention("7組", "zucca"), "505367227089027072");
+  assert.equal(nextDiaryMention("7組", "cigare"), "1129064791416254494");
 });
 
 test("表にない名前と、順番から外した人はメンションしない", () => {
@@ -43,7 +46,7 @@ test("通知は次の人だけを鳴らせる", () => {
     name: "てれ",
     slug: "abc",
   });
-  assert.match(payload.content, /<@258972154421444609>/);
+  assert.match(payload.content, /次の投稿者は<@258972154421444609>です/);
   assert.deepEqual(payload.allowed_mentions, {
     parse: [],
     users: ["258972154421444609"],
