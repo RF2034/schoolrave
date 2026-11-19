@@ -54,6 +54,11 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
     { names: ["オガ@Nero"], userId: "737280113229693020" },
     { names: ["シンジ"], userId: "708071973099536396" },
   ],
+  "7組": [
+    { names: ["Asamigori"], userId: "1129064791416254494" },
+    { names: ["Zucca"], userId: "1000058609457188944" },
+    { names: ["cigare"], userId: "505367227089027072" },
+  ],
 };
 
 const SITE = "https://schoolrave.net";
@@ -102,7 +107,7 @@ export function diaryDiscordPayload(input: {
     ? `/portal/diary/${encodeURIComponent(input.slug.trim())}`
     : "/portal/diary";
   const lines = ["交換日記が公開されました", head, `${SITE}${path}`];
-  if (userId) lines.push(`<@${userId}>`);
+  if (userId) lines.push(`次の投稿者は<@${userId}>です`);
   return {
     content: lines.join("\n"),
     allowed_mentions: { parse: [], users: userId ? [userId] : [] },

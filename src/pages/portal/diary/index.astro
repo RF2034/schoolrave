@@ -5,7 +5,7 @@ import { getEmDashCollection } from "emdash";
 
 export const prerender = false;
 
-const GROUPS = ["1組", "2組", "3組", "4組", "5組", "6組"] as const;
+const GROUPS = ["1組", "2組", "3組", "4組", "5組", "6組", "7組"] as const;
 const requested = Astro.url.searchParams.get("kumi");
 const kumi = GROUPS.find((group) => group === requested);
 
