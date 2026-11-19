@@ -103,6 +103,9 @@ async function notify(content: Record<string, unknown>): Promise<void> {
   }
 }
 
+/** 2026-11-20 06:00 JST の一度きり。あさみごりの公開で次の人に飛ばなかった分。 */
+const RETRY_ASAMIGORI = "retryAsamigori";
+
 function markOf(value: unknown): DiaryNoticeMark | null {
   return value === "sent" || value === "armed" ? value : null;
 }
@@ -182,6 +185,26 @@ export default {
         }
         // ponytail: 公開100件まで。超えたら list の cursor で続きを見る。
         await sendMissed(ctx, delivered ? id : "");
+      },
+    },
+    cron: {
+      timeout: 30_000,
+      handler: async (event: {
+        name: string;
+        data?: Record<string, unknown>;
+      }) => {
+        if (event.name !== RETRY_ASAMIGORI) return;
+        const data = event.data ?? {};
+        console.log("[diary-discord] retry mention");
+        await notify({
+          id: text(data.id),
+          slug: text(data.slug),
+          data: {
+            title: data.title,
+            kumi: data.kumi,
+            name: data.name,
+          },
+        });
       },
     },
     "content:afterUnpublish": {
