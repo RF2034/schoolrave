@@ -31,6 +31,7 @@ test("同じ組の次の人を指す。最後は先頭に戻る", () => {
   assert.equal(nextDiaryMention("7組", "Asamigori"), "1000058609457188944");
   assert.equal(nextDiaryMention("7組", "zucca"), "505367227089027072");
   assert.equal(nextDiaryMention("7組", "cigare"), "1129064791416254494");
+  assert.equal(nextDiaryMention("7組", "あさみごり"), "1000058609457188944");
 });
 
 test("表にない名前と、順番から外した人はメンションしない", () => {
