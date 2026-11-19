@@ -1,7 +1,7 @@
 import { defineMiddleware } from "astro:middleware";
 
 // ponytail: EmDash の「サイトを表示」は href="/" 固定。パス設定が付くまで、管理画面の描画後に差し替える。
-// ponytail: 投稿者欄も外せない。未割り当てにすると権限30は公開できないので、欄だけ隠す。所有者はログイン中の人のまま。
+// ponytail: 投稿者欄も執筆者欄も外せない。投稿者を未割り当てにすると権限30は公開できないので、欄だけ隠す。所有者はログイン中の人のまま。
 const SCRIPT = `<script>
 (() => {
   const next = "/portal/diary";
@@ -14,7 +14,13 @@ const SCRIPT = `<script>
     for (const section of document.querySelectorAll("section")) {
       const heading = section.querySelector("h3, [data-sortable-heading]");
       const label = (heading?.textContent || "").trim();
-      if (label !== "投稿者" && label !== "Ownership") continue;
+      if (
+        label !== "投稿者" &&
+        label !== "Ownership" &&
+        label !== "執筆者" &&
+        label !== "Bylines"
+      )
+        continue;
       section.hidden = true;
     }
   };
