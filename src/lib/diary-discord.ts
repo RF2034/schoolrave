@@ -8,6 +8,7 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
     { names: ["Neruyo"], userId: "624628070414024717" },
     { names: ["しゃげ"], userId: "523095960050597889" },
     { names: ["よほた"], userId: "559009226618437642" },
+    { names: ["てれ", "Telepath"], userId: "386883728099639298" },
   ],
   "2組": [
     { names: ["SUGACHAN", "༒༽ SUGACHAN༼༒"], userId: "493664722118377474" },
@@ -51,6 +52,7 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
     { names: ["kaki0121"], userId: "707236648781480069" },
     { names: ["正宗"], userId: "249160824944328706" },
     { names: ["オガ@Nero"], userId: "737280113229693020" },
+    { names: ["シンジ"], userId: "708071973099536396" },
   ],
 };
 
@@ -93,7 +95,7 @@ export function diaryDiscordPayload(input: {
   const title = input.title.replace(/\s+/g, " ").trim().slice(0, 200);
   const kumi = input.kumi.trim();
   const name = input.name.trim();
-  const userId = nextDiaryMention(kumi, name);
+  const userId = nextDiaryMention(kumi, name) ?? nextDiaryMention(kumi, title);
   const who = [kumi, name].filter(Boolean).join(" ");
   const head = who && title ? `${who}「${title}」` : who || title || "交換日記";
   const path = input.slug.trim()
@@ -110,9 +112,13 @@ export function diaryDiscordPayload(input: {
 /** sent: この公開は通知済み。armed: 非公開に戻したので次の公開で通知する。 */
 export type DiaryNoticeMark = "sent" | "armed";
 
+/** これより前の公開は、編集しても通知しない。通知を付けた日。 */
+export const DIARY_NOTICE_SINCE = "2026-11-14T00:00:00.000Z";
+
 /**
  * 通知を出すか。
- * 記録が無く、公開日時が更新日時より前なら、公開済み記事の編集なので出さない。
+ * 記録が無く、追跡開始前の記事で公開日時が更新日時より前なら、公開済みの編集なので出さない。
+ * 追跡開始後に印が無い記事は、公開処理が途中で落ちていても出す。
  * 非公開にしてから再公開した場合は armed が付いているので出す。
  */
 export function diaryPublishNotice(input: {
@@ -122,8 +128,31 @@ export function diaryPublishNotice(input: {
 }): "send" | "seal" | "skip" {
   if (input.mark === "sent") return "skip";
   if (input.mark === "armed") return "send";
-  if (publishedBeforeUpdate(input.publishedAt, input.updatedAt)) return "seal";
+  if (
+    !trackedPublish(input.publishedAt) &&
+    publishedBeforeUpdate(input.publishedAt, input.updatedAt)
+  ) {
+    return "seal";
+  }
   return "send";
+}
+
+function trackedPublish(publishedAt: string): boolean {
+  const published = Date.parse(publishedAt);
+  return (
+    !Number.isNaN(published) && published >= Date.parse(DIARY_NOTICE_SINCE)
+  );
+}
+
+/** 公開フックが落ちた記事。sent は送らない。追跡開始前の未通知も送らない。 */
+export function missedDiaryNotice(input: {
+  mark: DiaryNoticeMark | null;
+  publishedAt: string;
+  status: string;
+}): boolean {
+  if (input.status !== "published" || input.mark === "sent") return false;
+  if (input.mark === "armed") return true;
+  return trackedPublish(input.publishedAt);
 }
 
 function publishedBeforeUpdate(

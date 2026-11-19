@@ -3,12 +3,15 @@ import { test } from "node:test";
 import {
   diaryDiscordPayload,
   diaryPublishNotice,
+  missedDiaryNotice,
   nextDiaryMention,
 } from "./diary-discord.ts";
 
 test("同じ組の次の人を指す。最後は先頭に戻る", () => {
   assert.equal(nextDiaryMention("1組", "うさえ"), "624628070414024717");
-  assert.equal(nextDiaryMention("1組", "よほた"), "258972154421444609");
+  assert.equal(nextDiaryMention("1組", "よほた"), "386883728099639298");
+  assert.equal(nextDiaryMention("1組", "てれ"), "258972154421444609");
+  assert.equal(nextDiaryMention("1組", "Telepath"), "258972154421444609");
   assert.equal(nextDiaryMention("2組", "youzeo4"), "439009179827699712");
   assert.equal(
     nextDiaryMention("2組", "ＳＵＧＡＣＨＡＮ"),
@@ -23,7 +26,8 @@ test("同じ組の次の人を指す。最後は先頭に戻る", () => {
   assert.equal(nextDiaryMention("1組", "twoway"), null);
   assert.equal(nextDiaryMention("5組", "メジェド"), "477111503548579843");
   assert.equal(nextDiaryMention("5組", " メジエド "), "477111503548579843");
-  assert.equal(nextDiaryMention("6組", "オガ@Nero"), "366867831184424973");
+  assert.equal(nextDiaryMention("6組", "オガ@Nero"), "708071973099536396");
+  assert.equal(nextDiaryMention("6組", "シンジ"), "366867831184424973");
 });
 
 test("表にない名前と、順番から外した人はメンションしない", () => {
@@ -36,7 +40,7 @@ test("通知は次の人だけを鳴らせる", () => {
   const payload = diaryDiscordPayload({
     title: "今日",
     kumi: "1組",
-    name: "よほた",
+    name: "てれ",
     slug: "abc",
   });
   assert.match(payload.content, /<@258972154421444609>/);
@@ -48,20 +52,34 @@ test("通知は次の人だけを鳴らせる", () => {
     payload.content,
     /https:\/\/schoolrave\.net\/portal\/diary\/abc/,
   );
+  const shinji = diaryDiscordPayload({
+    title: "今日",
+    kumi: "6組",
+    name: "シンジ",
+    slug: "abc",
+  });
+  assert.deepEqual(shinji.allowed_mentions.users, ["366867831184424973"]);
   const quiet = diaryDiscordPayload({
     title: "@everyone",
     kumi: "5組",
     name: "\u91d6(KTN)",
     slug: "",
   });
+  const sabamiso = diaryDiscordPayload({
+    title: "2組4番　さばみそ🐟️",
+    kumi: "2組",
+    name: "",
+    slug: "2組4番-さばみそ",
+  });
+  assert.deepEqual(sabamiso.allowed_mentions.users, ["307163554279194625"]);
   assert.deepEqual(quiet.allowed_mentions.users, []);
   assert.equal(quiet.content.includes("<@"), false);
   assert.match(quiet.content, /https:\/\/schoolrave\.net\/portal\/diary$/);
 });
 
 test("通知は初回公開と、非公開から戻した再公開だけ", () => {
-  const published = "2026-11-14T09:20:00.000Z";
-  const edited = "2026-11-14T09:25:00.000Z";
+  const published = "2026-11-13T09:20:00.000Z";
+  const edited = "2026-11-13T09:25:00.000Z";
   assert.equal(
     diaryPublishNotice({
       mark: null,
@@ -77,6 +95,14 @@ test("通知は初回公開と、非公開から戻した再公開だけ", () =>
       updatedAt: edited,
     }),
     "seal",
+  );
+  assert.equal(
+    diaryPublishNotice({
+      mark: null,
+      publishedAt: "2026-11-16T14:29:34.117Z",
+      updatedAt: "2026-11-16T15:00:00.000Z",
+    }),
+    "send",
   );
   assert.equal(
     diaryPublishNotice({
@@ -97,5 +123,48 @@ test("通知は初回公開と、非公開から戻した再公開だけ", () =>
   assert.equal(
     diaryPublishNotice({ mark: null, publishedAt: "", updatedAt: edited }),
     "send",
+  );
+});
+
+test("フックが落ちた追跡後の公開だけ、あとから送る", () => {
+  assert.equal(
+    missedDiaryNotice({
+      mark: null,
+      publishedAt: "2026-11-16T14:29:34.117Z",
+      status: "published",
+    }),
+    true,
+  );
+  assert.equal(
+    missedDiaryNotice({
+      mark: "sent",
+      publishedAt: "2026-11-16T14:29:34.117Z",
+      status: "published",
+    }),
+    false,
+  );
+  assert.equal(
+    missedDiaryNotice({
+      mark: null,
+      publishedAt: "2026-11-08T01:03:31.720Z",
+      status: "published",
+    }),
+    false,
+  );
+  assert.equal(
+    missedDiaryNotice({
+      mark: "armed",
+      publishedAt: "2026-11-08T01:03:31.720Z",
+      status: "published",
+    }),
+    true,
+  );
+  assert.equal(
+    missedDiaryNotice({
+      mark: null,
+      publishedAt: "2026-11-16T14:29:34.117Z",
+      status: "draft",
+    }),
+    false,
   );
 });
