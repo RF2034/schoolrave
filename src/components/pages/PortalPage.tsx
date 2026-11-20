@@ -14,6 +14,10 @@ const VENUE_SHEET_PREVIEW =
 const DRIVE_URL =
   "https://drive.google.com/drive/folders/1QG-uD__KaucfX4I0_MiiFZ0gjZcaMhik?usp=drive_link";
 
+const SHIORI_URL =
+  "https://www.canva.com/design/DAHaPFezfTU/jmzQCziKwrtpNFPuTRpGOw/view";
+const SHIORI_EMBED = `${SHIORI_URL}?embed`;
+
 const DRIVE_TREE = `ガッコウレイヴ2026/
 ├── Docs/
 │   ├── 全体/
@@ -235,6 +239,26 @@ export default function PortalPage({
           >
             <a href="/portal/diary">交換日記入口</a>
           </h2>
+        </section>
+
+        <section
+          id="shiori"
+          className="portal__section"
+          aria-labelledby="shiori-heading"
+        >
+          <h2 id="shiori-heading" className="portal__section-title">
+            旅のしおり
+          </h2>
+          <p className="portal__note">
+            <ExternalLink href={SHIORI_URL}>Canvaで開く</ExternalLink>
+          </p>
+          <iframe
+            className="portal__sheet portal__sheet--book"
+            title="ガッコウレイヴ2026 旅のしおり"
+            src={SHIORI_EMBED}
+            allow="fullscreen"
+            allowFullScreen
+          />
         </section>
 
         <section
