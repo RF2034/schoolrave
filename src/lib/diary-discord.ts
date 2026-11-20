@@ -63,6 +63,25 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
 
 const SITE = "https://schoolrave.net";
 
+/** 開催中の通知先。このチャンネルに作った Webhook を別の秘密情報に置く。 */
+export const DIARY_EVENT_CHANNEL_ID = "1572179336109228073";
+
+/** この瞬間（日本時間の 11/24 0:00）から、通常の通知先に戻す。 */
+export const DIARY_EVENT_CHANNEL_UNTIL_MS = Date.parse(
+  "2026-11-24T00:00:00+09:00",
+);
+
+/** 開催中で開催用 URL があるときだけそちら。無いときは通常の URL。 */
+export function selectDiaryWebhook(input: {
+  now: number;
+  usual: string | null;
+  event: string | null;
+}): string | null {
+  if (input.now < DIARY_EVENT_CHANNEL_UNTIL_MS && input.event)
+    return input.event;
+  return input.usual;
+}
+
 export function normalizeDiaryName(value: string): string {
   return value.normalize("NFKC").trim().toLowerCase();
 }
