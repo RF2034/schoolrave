@@ -1,8 +1,11 @@
 import { env } from "cloudflare:workers";
 import {
+  DIARY_EVENT_CHANNEL_ID,
+  DIARY_EVENT_CHANNEL_UNTIL_MS,
   diaryDiscordPayload,
   diaryPublishNotice,
   missedDiaryNotice,
+  selectDiaryWebhook,
   type DiaryNoticeMark,
 } from "@/lib/diary-discord";
 
@@ -64,19 +67,41 @@ function text(value: unknown): string {
   return typeof value === "string" ? value : "";
 }
 
-function webhookUrl(): string | null {
-  const raw = (env as Cloudflare.Env).DISCORD_DIARY_WEBHOOK_URL;
-  if (typeof raw !== "string") return null;
-  const url = raw.trim();
+function trimmed(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const url = value.trim();
+  return url || null;
+}
+
+function discordWebhook(url: string | null): string | null {
+  if (!url) return null;
   if (
     url.startsWith("https://discord.com/api/webhooks/") ||
     url.startsWith("https://discordapp.com/api/webhooks/")
   ) {
     return url;
   }
-  if (url)
-    console.error("[diary-discord] webhook URL is not a Discord webhook");
+  console.error("[diary-discord] webhook URL is not a Discord webhook");
   return null;
+}
+
+function webhookUrl(): string | null {
+  const now = Date.now();
+  const bindings = env as Cloudflare.Env;
+  const event = trimmed(bindings.DISCORD_DIARY_EVENT_WEBHOOK_URL);
+  if (now < DIARY_EVENT_CHANNEL_UNTIL_MS && !event) {
+    console.error(
+      "[diary-discord] event webhook missing",
+      DIARY_EVENT_CHANNEL_ID,
+    );
+  }
+  return discordWebhook(
+    selectDiaryWebhook({
+      now,
+      usual: trimmed(bindings.DISCORD_DIARY_WEBHOOK_URL),
+      event,
+    }),
+  );
 }
 
 async function notify(content: Record<string, unknown>): Promise<void> {

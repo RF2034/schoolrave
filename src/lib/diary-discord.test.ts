@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  DIARY_EVENT_CHANNEL_ID,
   diaryDiscordPayload,
   diaryPublishNotice,
   missedDiaryNotice,
   nextDiaryMention,
+  selectDiaryWebhook,
 } from "./diary-discord.ts";
 
 test("同じ組の次の人を指す。最後は先頭に戻る", () => {
@@ -38,6 +40,23 @@ test("表にない名前と、順番から外した人はメンションしな�
   assert.equal(nextDiaryMention("5組", "\u91d6(KTN)"), null);
   assert.equal(nextDiaryMention("1組", "たろう"), null);
   assert.equal(nextDiaryMention("2組", "うさえ"), null);
+});
+
+test("日本時間の 11/24 0:00 までは開催チャンネルの Webhook を使う", () => {
+  const until = Date.parse("2026-11-24T00:00:00+09:00");
+  assert.equal(DIARY_EVENT_CHANNEL_ID, "1572179336109228073");
+  assert.equal(
+    selectDiaryWebhook({ now: until - 1, usual: "usual", event: "event" }),
+    "event",
+  );
+  assert.equal(
+    selectDiaryWebhook({ now: until, usual: "usual", event: "event" }),
+    "usual",
+  );
+  assert.equal(
+    selectDiaryWebhook({ now: until - 1, usual: "usual", event: null }),
+    "usual",
+  );
 });
 
 test("通知は次の人だけを鳴らせる", () => {
