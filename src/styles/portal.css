@@ -213,6 +213,13 @@
   border: 1px solid var(--portal-border);
 }
 
+.portal__sheet--book {
+  width: min(100%, 34rem);
+  height: min(82vh, 54rem);
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .portal__empty {
   margin: 1rem 0 0;
   color: var(--portal-muted);
