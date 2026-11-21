@@ -3,10 +3,8 @@ import { test } from "node:test";
 import { diaryUserId } from "./diary-discord.ts";
 import {
   dueShifts,
-  nextShift,
   parseShiftCsv,
   shiftDiscordPayload,
-  shiftTestPayload,
   type ShiftSlot,
 } from "./shift-discord.ts";
 
@@ -39,13 +37,15 @@ test("シートの担当を開始時刻で1枠にまとめる", () => {
   assert.equal(slots[1].startMs, at(22, 0, 0));
 });
 
-test("開始の5分前から開始直前までだけ出す", () => {
+test("開始の5分前から、開始の1分後まで出す", () => {
   const [slot] = parseShiftCsv(CSV);
   const start = slot.startMs;
   assert.equal(dueShifts([slot], start - 5 * 60 * 1000).length, 1);
   assert.equal(dueShifts([slot], start - 5 * 60 * 1000 - 1).length, 0);
   assert.equal(dueShifts([slot], start - 1).length, 1);
-  assert.equal(dueShifts([slot], start).length, 0);
+  assert.equal(dueShifts([slot], start).length, 1);
+  assert.equal(dueShifts([slot], start + 60 * 1000 - 1).length, 1);
+  assert.equal(dueShifts([slot], start + 60 * 1000).length, 0);
   const empty: ShiftSlot = { ...slot, names: [] };
   assert.equal(dueShifts([empty], start - 1).length, 0);
 });
@@ -72,23 +72,6 @@ test("担当をメンションし、表にない名前はそのまま出す", ()
     "624628070414024717",
   ]);
   assert.equal(payload.content.includes("@everyone"), false);
-});
-
-test("テスト通知は次の枠に、テストだと分かる行を足す", () => {
-  const slots = parseShiftCsv(CSV);
-  const now = slots[0].startMs - 60 * 60 * 1000;
-  assert.equal(nextShift(slots, now)?.id, "2026-11-21T21:00");
-  assert.equal(nextShift(slots, slots[0].startMs)?.id, "2026-11-22T00:00");
-  assert.equal(nextShift(slots, slots[1].startMs), null);
-  const payload = shiftTestPayload(slots[0]);
-  assert.match(
-    payload.content,
-    /^【テスト】動作確認です。本番は開始5分前に送ります。\n21:00–22:00 /,
-  );
-  assert.equal(
-    shiftDiscordPayload(slots[0]).content.startsWith("【テスト】"),
-    false,
-  );
 });
 
 test("シフト表の表記は交換日記の本人に当たる", () => {

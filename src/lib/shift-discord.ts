@@ -10,6 +10,7 @@ export type ShiftSlot = {
 };
 
 const LEAD_MS = 5 * 60 * 1000;
+const GRACE_MS = 60 * 1000;
 
 const TASK = "ゴミ回収・コップ回収・ドリンク補充・加湿器補充";
 const DETAIL =
@@ -90,23 +91,14 @@ export function parseShiftCsv(csv: string): ShiftSlot[] {
   return [...byId.values()];
 }
 
-/** 開始の5分前から、開始直前まで。開始ちょうどはもう出さない。 */
+/** 開始の5分前から、開始の1分後まで。開始ちょうどに来た cron でも出す。 */
 export function dueShifts(slots: ShiftSlot[], now: number): ShiftSlot[] {
   return slots.filter(
     (slot) =>
       slot.names.length > 0 &&
       now >= slot.startMs - LEAD_MS &&
-      now < slot.startMs,
+      now < slot.startMs + GRACE_MS,
   );
-}
-
-export function nextShift(slots: ShiftSlot[], now: number): ShiftSlot | null {
-  let next: ShiftSlot | null = null;
-  for (const slot of slots) {
-    if (slot.names.length === 0 || slot.startMs <= now) continue;
-    if (!next || slot.startMs < next.startMs) next = slot;
-  }
-  return next;
 }
 
 export function shiftDiscordPayload(slot: {
@@ -128,18 +120,5 @@ export function shiftDiscordPayload(slot: {
       DETAIL,
     ].join("\n"),
     allowed_mentions: { parse: [], users },
-  };
-}
-
-/** 本番の文面の前に、テストだと分かる1行を足す。 */
-export function shiftTestPayload(slot: {
-  start: string;
-  end: string;
-  names: string[];
-}): { content: string; allowed_mentions: { parse: []; users: string[] } } {
-  const payload = shiftDiscordPayload(slot);
-  return {
-    ...payload,
-    content: `【テスト】動作確認です。本番は開始5分前に送ります。\n${payload.content}`,
   };
 }

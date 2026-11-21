@@ -1,9 +1,7 @@
 import {
   dueShifts,
-  nextShift,
   parseShiftCsv,
   shiftDiscordPayload,
-  shiftTestPayload,
 } from "./shift-discord.ts";
 
 const CSV_URL =
@@ -11,7 +9,7 @@ const CSV_URL =
 
 type Statement = {
   bind(...values: unknown[]): Statement;
-  run(): Promise<{ meta?: { changes?: number } }>;
+  run(): Promise<{ meta?: { changes?: number }; results?: unknown[] }>;
 };
 
 type ShiftDb = { prepare(query: string): Statement };
@@ -50,10 +48,12 @@ async function claim(db: ShiftDb, id: string, now: number): Promise<boolean> {
   const result = await db
     .prepare(
       `INSERT INTO shift_notice (slot, sent_at) VALUES (?, ?)
-       ON CONFLICT(slot) DO NOTHING`,
+       ON CONFLICT(slot) DO NOTHING
+       RETURNING slot`,
     )
     .bind(id, new Date(now).toISOString())
     .run();
+  if (Array.isArray(result.results)) return result.results.length > 0;
   return (result.meta?.changes ?? 0) > 0;
 }
 
@@ -80,8 +80,6 @@ async function post(
   }
 }
 
-const TEST_SLOT = "test-once";
-
 async function readSlots(): Promise<
   { slots: ReturnType<typeof parseShiftCsv> } | { error: string }
 > {
@@ -93,32 +91,6 @@ async function readSlots(): Promise<
   const slots = parseShiftCsv(await response.text());
   if (slots.length === 0) return { error: "sheet empty" };
   return { slots };
-}
-
-/** 次の枠を1通だけ送る。本番の送信済みにはしない。 */
-export async function sendShiftTest(
-  env: unknown,
-  now = Date.now(),
-): Promise<{ ok: true; slot: string } | { ok: false; error: string }> {
-  const worker = env as ShiftEnv;
-  const db = worker.DB;
-  const url = webhookUrl(worker.DISCORD_DIARY_WEBHOOK_URL);
-  if (!db || !url) return { ok: false, error: "missing db or webhook" };
-  const loaded = await readSlots();
-  if ("error" in loaded) return { ok: false, error: loaded.error };
-  const slot = nextShift(loaded.slots, now);
-  if (!slot) return { ok: false, error: "no upcoming shift" };
-  await ready(db);
-  if (!(await claim(db, TEST_SLOT, now))) {
-    return { ok: false, error: "already sent" };
-  }
-  try {
-    await post(url, shiftTestPayload(slot));
-  } catch {
-    await release(db, TEST_SLOT);
-    return { ok: false, error: "webhook failed" };
-  }
-  return { ok: true, slot: slot.id };
 }
 
 /** 開始5分前の枠だけ、その場でシートを読んで1回送る。失敗した枠は次の分でやり直す。 */
@@ -146,6 +118,7 @@ export async function notifyDueShifts(
       if (!(await claim(db, slot.id, now))) continue;
       try {
         await post(url, shiftDiscordPayload(slot));
+        console.log("[shift-discord] sent", slot.id);
       } catch {
         console.error("[shift-discord] notify failed");
         await release(db, slot.id);
