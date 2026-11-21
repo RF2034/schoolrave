@@ -100,6 +100,15 @@ export function dueShifts(slots: ShiftSlot[], now: number): ShiftSlot[] {
   );
 }
 
+export function nextShift(slots: ShiftSlot[], now: number): ShiftSlot | null {
+  let next: ShiftSlot | null = null;
+  for (const slot of slots) {
+    if (slot.names.length === 0 || slot.startMs <= now) continue;
+    if (!next || slot.startMs < next.startMs) next = slot;
+  }
+  return next;
+}
+
 export function shiftDiscordPayload(slot: {
   start: string;
   end: string;
@@ -119,5 +128,18 @@ export function shiftDiscordPayload(slot: {
       DETAIL,
     ].join("\n"),
     allowed_mentions: { parse: [], users },
+  };
+}
+
+/** 本番の文面の前に、テストだと分かる1行を足す。 */
+export function shiftTestPayload(slot: {
+  start: string;
+  end: string;
+  names: string[];
+}): { content: string; allowed_mentions: { parse: []; users: string[] } } {
+  const payload = shiftDiscordPayload(slot);
+  return {
+    ...payload,
+    content: `【テスト】動作確認です。本番は開始5分前に送ります。\n${payload.content}`,
   };
 }

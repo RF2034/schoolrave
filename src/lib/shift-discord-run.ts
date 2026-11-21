@@ -1,7 +1,9 @@
 import {
   dueShifts,
+  nextShift,
   parseShiftCsv,
   shiftDiscordPayload,
+  shiftTestPayload,
 } from "./shift-discord.ts";
 
 const CSV_URL =
@@ -78,6 +80,47 @@ async function post(
   }
 }
 
+const TEST_SLOT = "test-once";
+
+async function readSlots(): Promise<
+  { slots: ReturnType<typeof parseShiftCsv> } | { error: string }
+> {
+  const response = await fetch(CSV_URL, {
+    redirect: "follow",
+    cache: "no-store",
+  });
+  if (!response.ok) return { error: `sheet ${response.status}` };
+  const slots = parseShiftCsv(await response.text());
+  if (slots.length === 0) return { error: "sheet empty" };
+  return { slots };
+}
+
+/** 次の枠を1通だけ送る。本番の送信済みにはしない。 */
+export async function sendShiftTest(
+  env: unknown,
+  now = Date.now(),
+): Promise<{ ok: true; slot: string } | { ok: false; error: string }> {
+  const worker = env as ShiftEnv;
+  const db = worker.DB;
+  const url = webhookUrl(worker.DISCORD_DIARY_WEBHOOK_URL);
+  if (!db || !url) return { ok: false, error: "missing db or webhook" };
+  const loaded = await readSlots();
+  if ("error" in loaded) return { ok: false, error: loaded.error };
+  const slot = nextShift(loaded.slots, now);
+  if (!slot) return { ok: false, error: "no upcoming shift" };
+  await ready(db);
+  if (!(await claim(db, TEST_SLOT, now))) {
+    return { ok: false, error: "already sent" };
+  }
+  try {
+    await post(url, shiftTestPayload(slot));
+  } catch {
+    await release(db, TEST_SLOT);
+    return { ok: false, error: "webhook failed" };
+  }
+  return { ok: true, slot: slot.id };
+}
+
 /** 開始5分前の枠だけ、その場でシートを読んで1回送る。失敗した枠は次の分でやり直す。 */
 export async function notifyDueShifts(
   env: unknown,
@@ -91,20 +134,12 @@ export async function notifyDueShifts(
       console.error("[shift-discord] missing db or webhook");
       return;
     }
-    const response = await fetch(CSV_URL, {
-      redirect: "follow",
-      cache: "no-store",
-    });
-    if (!response.ok) {
-      console.error("[shift-discord] sheet status", response.status);
+    const loaded = await readSlots();
+    if ("error" in loaded) {
+      console.error("[shift-discord]", loaded.error);
       return;
     }
-    const slots = parseShiftCsv(await response.text());
-    if (slots.length === 0) {
-      console.error("[shift-discord] sheet has no shifts");
-      return;
-    }
-    const due = dueShifts(slots, now);
+    const due = dueShifts(loaded.slots, now);
     if (due.length === 0) return;
     await ready(db);
     for (const slot of due) {
