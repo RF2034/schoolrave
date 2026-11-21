@@ -7,12 +7,10 @@ import {
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/1O6Pl5W10lLasni7azFAHcyKXQNZsM91ufCCVIGrvm6Q/export?format=csv&gid=1053159720";
 
-type NoticeRow = { sent_at?: string; ok?: number };
-
 type Statement = {
   bind(...values: unknown[]): Statement;
-  run(): Promise<{ meta?: { changes?: number }; results?: unknown[] }>;
-  all(): Promise<{ results?: NoticeRow[] }>;
+  run(): Promise<{ meta?: { changes?: number } }>;
+  first<T>(): Promise<T | null>;
 };
 
 type ShiftDb = { prepare(query: string): Statement };
@@ -39,66 +37,34 @@ function webhookUrl(raw: unknown): string | null {
 async function ready(db: ShiftDb): Promise<void> {
   await db
     .prepare(
-      `CREATE TABLE IF NOT EXISTS shift_notice (
+      `CREATE TABLE IF NOT EXISTS shift_sent (
         slot TEXT PRIMARY KEY,
-        sent_at TEXT NOT NULL,
-        ok INTEGER NOT NULL DEFAULT 0
+        sent_at TEXT NOT NULL
       )`,
     )
     .run();
-  try {
-    await db
-      .prepare(
-        `ALTER TABLE shift_notice ADD COLUMN ok INTEGER NOT NULL DEFAULT 0`,
-      )
-      .run();
-  } catch {
-    // 列は既にある
-  }
-}
-
-async function notice(db: ShiftDb, id: string): Promise<NoticeRow | null> {
-  const got = await db
-    .prepare(`SELECT sent_at, ok FROM shift_notice WHERE slot = ?`)
-    .bind(id)
-    .all();
-  return got.results?.[0] ?? null;
 }
 
 async function claim(db: ShiftDb, id: string, now: number): Promise<boolean> {
   const sentAt = new Date(now).toISOString();
-  await db
+  const inserted = await db
     .prepare(
-      `INSERT INTO shift_notice (slot, sent_at, ok) VALUES (?, ?, 0)
+      `INSERT INTO shift_sent (slot, sent_at) VALUES (?, ?)
        ON CONFLICT(slot) DO NOTHING`,
     )
     .bind(id, sentAt)
     .run();
-  let row = await notice(db, id);
-  if (!row || Number(row.ok) === 1) return false;
-  if (row.sent_at !== sentAt) {
-    // ponytail: 送る前に残った行は取り直す。同時に2分来たら1通余分に出ることがある。
-    await db
-      .prepare(
-        `UPDATE shift_notice SET sent_at = ? WHERE slot = ? AND ok = 0 AND sent_at = ?`,
-      )
-      .bind(sentAt, id, row.sent_at)
-      .run();
-    row = await notice(db, id);
-  }
-  return row?.sent_at === sentAt && Number(row.ok) !== 1;
-}
-
-async function markSent(db: ShiftDb, id: string): Promise<void> {
-  await db
-    .prepare(`UPDATE shift_notice SET ok = 1 WHERE slot = ?`)
+  if ((inserted.meta?.changes ?? 0) > 0) return true;
+  const row = await db
+    .prepare(`SELECT sent_at FROM shift_sent WHERE slot = ?`)
     .bind(id)
-    .run();
+    .first<{ sent_at?: string }>();
+  return row?.sent_at === sentAt;
 }
 
 async function release(db: ShiftDb, id: string): Promise<void> {
   try {
-    await db.prepare(`DELETE FROM shift_notice WHERE slot = ?`).bind(id).run();
+    await db.prepare(`DELETE FROM shift_sent WHERE slot = ?`).bind(id).run();
   } catch {
     console.error("[shift-discord] release failed");
   }
@@ -132,39 +98,45 @@ async function readSlots(): Promise<
   return { slots };
 }
 
+export type ShiftNoticeReport = { sent: string[]; error?: string };
+
 /** 開始5分前から終了までの枠を、その場でシートを読んで1回送る。失敗した枠は次の分でやり直す。 */
 export async function notifyDueShifts(
   env: unknown,
   now = Date.now(),
-): Promise<void> {
+): Promise<ShiftNoticeReport> {
+  const sent: string[] = [];
   try {
     const worker = env as ShiftEnv;
     const db = worker.DB;
     const url = webhookUrl(worker.DISCORD_DIARY_WEBHOOK_URL);
     if (!db || !url) {
       console.error("[shift-discord] missing db or webhook");
-      return;
+      return { sent, error: !db ? "missing db" : "missing webhook" };
     }
     const loaded = await readSlots();
     if ("error" in loaded) {
       console.error("[shift-discord]", loaded.error);
-      return;
+      return { sent, error: loaded.error };
     }
     const due = dueShifts(loaded.slots, now);
-    if (due.length === 0) return;
+    if (due.length === 0) return { sent };
     await ready(db);
     for (const slot of due) {
       if (!(await claim(db, slot.id, now))) continue;
       try {
         await post(url, shiftDiscordPayload(slot));
-        await markSent(db, slot.id);
+        sent.push(slot.id);
         console.log("[shift-discord] sent", slot.id);
       } catch {
         console.error("[shift-discord] notify failed");
         await release(db, slot.id);
+        return { sent, error: "webhook rejected" };
       }
     }
+    return { sent };
   } catch {
     console.error("[shift-discord] failed");
+    return { sent, error: "failed" };
   }
 }
