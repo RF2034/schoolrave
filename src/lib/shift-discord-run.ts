@@ -45,21 +45,22 @@ async function ready(db: ShiftDb): Promise<void> {
     .run();
 }
 
-async function claim(db: ShiftDb, id: string, now: number): Promise<boolean> {
-  const sentAt = new Date(now).toISOString();
-  const inserted = await db
+async function held(db: ShiftDb, id: string): Promise<boolean> {
+  const row = await db
+    .prepare(`SELECT slot FROM shift_sent WHERE slot = ?`)
+    .bind(id)
+    .first<{ slot?: string }>();
+  return row?.slot === id;
+}
+
+async function remember(db: ShiftDb, id: string, now: number): Promise<void> {
+  await db
     .prepare(
       `INSERT INTO shift_sent (slot, sent_at) VALUES (?, ?)
-       ON CONFLICT(slot) DO NOTHING`,
+       ON CONFLICT(slot) DO UPDATE SET sent_at = excluded.sent_at`,
     )
-    .bind(id, sentAt)
+    .bind(id, new Date(now).toISOString())
     .run();
-  if ((inserted.meta?.changes ?? 0) > 0) return true;
-  const row = await db
-    .prepare(`SELECT sent_at FROM shift_sent WHERE slot = ?`)
-    .bind(id)
-    .first<{ sent_at?: string }>();
-  return row?.sent_at === sentAt;
 }
 
 async function release(db: ShiftDb, id: string): Promise<void> {
@@ -98,45 +99,62 @@ async function readSlots(): Promise<
   return { slots };
 }
 
-export type ShiftNoticeReport = { sent: string[]; error?: string };
+export type ShiftNoticeReport = {
+  sent: string[];
+  due: string[];
+  held: string[];
+  error?: string;
+};
 
 /** 開始5分前から終了までの枠を、その場でシートを読んで1回送る。失敗した枠は次の分でやり直す。 */
 export async function notifyDueShifts(
   env: unknown,
   now = Date.now(),
+  opts?: { force?: boolean },
 ): Promise<ShiftNoticeReport> {
   const sent: string[] = [];
+  const heldIds: string[] = [];
   try {
     const worker = env as ShiftEnv;
     const db = worker.DB;
     const url = webhookUrl(worker.DISCORD_DIARY_WEBHOOK_URL);
     if (!db || !url) {
       console.error("[shift-discord] missing db or webhook");
-      return { sent, error: !db ? "missing db" : "missing webhook" };
+      return {
+        sent,
+        due: [],
+        held: heldIds,
+        error: !db ? "missing db" : "missing webhook",
+      };
     }
     const loaded = await readSlots();
     if ("error" in loaded) {
       console.error("[shift-discord]", loaded.error);
-      return { sent, error: loaded.error };
+      return { sent, due: [], held: heldIds, error: loaded.error };
     }
     const due = dueShifts(loaded.slots, now);
-    if (due.length === 0) return { sent };
+    const dueIds = due.map((slot) => slot.id);
+    if (due.length === 0) return { sent, due: dueIds, held: heldIds };
     await ready(db);
     for (const slot of due) {
-      if (!(await claim(db, slot.id, now))) continue;
+      if (!opts?.force && (await held(db, slot.id))) {
+        heldIds.push(slot.id);
+        continue;
+      }
       try {
         await post(url, shiftDiscordPayload(slot));
+        await remember(db, slot.id, now);
         sent.push(slot.id);
         console.log("[shift-discord] sent", slot.id);
       } catch {
         console.error("[shift-discord] notify failed");
         await release(db, slot.id);
-        return { sent, error: "webhook rejected" };
+        return { sent, due: dueIds, held: heldIds, error: "webhook rejected" };
       }
     }
-    return { sent };
+    return { sent, due: dueIds, held: heldIds };
   } catch {
     console.error("[shift-discord] failed");
-    return { sent, error: "failed" };
+    return { sent, due: [], held: heldIds, error: "failed" };
   }
 }
