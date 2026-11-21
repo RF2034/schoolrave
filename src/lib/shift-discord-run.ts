@@ -17,8 +17,11 @@ type ShiftDb = { prepare(query: string): Statement };
 
 type ShiftEnv = {
   DB?: ShiftDb;
-  DISCORD_DIARY_WEBHOOK_URL?: string;
 };
+
+// 当日連絡用。交換日記のウェブフックは使わない。
+const TASK_WEBHOOK =
+  "https://discord.com/api/webhooks/1573540535015178390/BsYmf1uUYO-_fikqXl46853I-xWkRcewrf8yZn83rVbydQN-_NtMwsJgwYIuh8jIJ7xE";
 
 function webhookUrl(raw: unknown): string | null {
   if (typeof raw !== "string") return null;
@@ -117,7 +120,7 @@ export async function notifyDueShifts(
   try {
     const worker = env as ShiftEnv;
     const db = worker.DB;
-    const url = webhookUrl(worker.DISCORD_DIARY_WEBHOOK_URL);
+    const url = webhookUrl(TASK_WEBHOOK);
     if (!db || !url) {
       console.error("[shift-discord] missing db or webhook");
       return {
