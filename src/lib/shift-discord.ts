@@ -10,7 +10,6 @@ export type ShiftSlot = {
 };
 
 const LEAD_MS = 5 * 60 * 1000;
-const GRACE_MS = 60 * 1000;
 
 const TASK = "ゴミ回収・コップ回収・ドリンク補充・加湿器補充";
 const DETAIL =
@@ -91,13 +90,21 @@ export function parseShiftCsv(csv: string): ShiftSlot[] {
   return [...byId.values()];
 }
 
-/** 開始の5分前から、開始の1分後まで。開始ちょうどに来た cron でも出す。 */
+function endMs(slot: ShiftSlot): number {
+  const [sh, sm] = slot.start.split(":").map(Number);
+  const [eh, em] = slot.end.split(":").map(Number);
+  let delta = (eh * 60 + em - (sh * 60 + sm)) * 60 * 1000;
+  if (delta <= 0) delta += 24 * 60 * 60 * 1000;
+  return slot.startMs + delta;
+}
+
+/** 開始の5分前から、終了まで。遅れた分でも、その枠のあいだは出す。 */
 export function dueShifts(slots: ShiftSlot[], now: number): ShiftSlot[] {
   return slots.filter(
     (slot) =>
       slot.names.length > 0 &&
       now >= slot.startMs - LEAD_MS &&
-      now < slot.startMs + GRACE_MS,
+      now < endMs(slot),
   );
 }
 

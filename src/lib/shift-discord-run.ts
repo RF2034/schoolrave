@@ -7,9 +7,12 @@ import {
 const CSV_URL =
   "https://docs.google.com/spreadsheets/d/1O6Pl5W10lLasni7azFAHcyKXQNZsM91ufCCVIGrvm6Q/export?format=csv&gid=1053159720";
 
+type NoticeRow = { sent_at?: string; ok?: number };
+
 type Statement = {
   bind(...values: unknown[]): Statement;
   run(): Promise<{ meta?: { changes?: number }; results?: unknown[] }>;
+  all(): Promise<{ results?: NoticeRow[] }>;
 };
 
 type ShiftDb = { prepare(query: string): Statement };
@@ -38,23 +41,59 @@ async function ready(db: ShiftDb): Promise<void> {
     .prepare(
       `CREATE TABLE IF NOT EXISTS shift_notice (
         slot TEXT PRIMARY KEY,
-        sent_at TEXT NOT NULL
+        sent_at TEXT NOT NULL,
+        ok INTEGER NOT NULL DEFAULT 0
       )`,
     )
     .run();
+  try {
+    await db
+      .prepare(
+        `ALTER TABLE shift_notice ADD COLUMN ok INTEGER NOT NULL DEFAULT 0`,
+      )
+      .run();
+  } catch {
+    // 列は既にある
+  }
+}
+
+async function notice(db: ShiftDb, id: string): Promise<NoticeRow | null> {
+  const got = await db
+    .prepare(`SELECT sent_at, ok FROM shift_notice WHERE slot = ?`)
+    .bind(id)
+    .all();
+  return got.results?.[0] ?? null;
 }
 
 async function claim(db: ShiftDb, id: string, now: number): Promise<boolean> {
-  const result = await db
+  const sentAt = new Date(now).toISOString();
+  await db
     .prepare(
-      `INSERT INTO shift_notice (slot, sent_at) VALUES (?, ?)
-       ON CONFLICT(slot) DO NOTHING
-       RETURNING slot`,
+      `INSERT INTO shift_notice (slot, sent_at, ok) VALUES (?, ?, 0)
+       ON CONFLICT(slot) DO NOTHING`,
     )
-    .bind(id, new Date(now).toISOString())
+    .bind(id, sentAt)
     .run();
-  if (Array.isArray(result.results)) return result.results.length > 0;
-  return (result.meta?.changes ?? 0) > 0;
+  let row = await notice(db, id);
+  if (!row || Number(row.ok) === 1) return false;
+  if (row.sent_at !== sentAt) {
+    // ponytail: 送る前に残った行は取り直す。同時に2分来たら1通余分に出ることがある。
+    await db
+      .prepare(
+        `UPDATE shift_notice SET sent_at = ? WHERE slot = ? AND ok = 0 AND sent_at = ?`,
+      )
+      .bind(sentAt, id, row.sent_at)
+      .run();
+    row = await notice(db, id);
+  }
+  return row?.sent_at === sentAt && Number(row.ok) !== 1;
+}
+
+async function markSent(db: ShiftDb, id: string): Promise<void> {
+  await db
+    .prepare(`UPDATE shift_notice SET ok = 1 WHERE slot = ?`)
+    .bind(id)
+    .run();
 }
 
 async function release(db: ShiftDb, id: string): Promise<void> {
@@ -93,7 +132,7 @@ async function readSlots(): Promise<
   return { slots };
 }
 
-/** 開始5分前の枠だけ、その場でシートを読んで1回送る。失敗した枠は次の分でやり直す。 */
+/** 開始5分前から終了までの枠を、その場でシートを読んで1回送る。失敗した枠は次の分でやり直す。 */
 export async function notifyDueShifts(
   env: unknown,
   now = Date.now(),
@@ -118,6 +157,7 @@ export async function notifyDueShifts(
       if (!(await claim(db, slot.id, now))) continue;
       try {
         await post(url, shiftDiscordPayload(slot));
+        await markSent(db, slot.id);
         console.log("[shift-discord] sent", slot.id);
       } catch {
         console.error("[shift-discord] notify failed");

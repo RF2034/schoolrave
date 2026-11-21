@@ -37,17 +37,25 @@ test("シートの担当を開始時刻で1枠にまとめる", () => {
   assert.equal(slots[1].startMs, at(22, 0, 0));
 });
 
-test("開始の5分前から、開始の1分後まで出す", () => {
+test("開始の5分前から、終了まで出す", () => {
   const [slot] = parseShiftCsv(CSV);
   const start = slot.startMs;
+  const wrap: ShiftSlot = {
+    ...slot,
+    id: "2026-11-21T23:00",
+    start: "23:00",
+    end: "00:00",
+    startMs: at(21, 23, 0),
+  };
   assert.equal(dueShifts([slot], start - 5 * 60 * 1000).length, 1);
   assert.equal(dueShifts([slot], start - 5 * 60 * 1000 - 1).length, 0);
-  assert.equal(dueShifts([slot], start - 1).length, 1);
   assert.equal(dueShifts([slot], start).length, 1);
-  assert.equal(dueShifts([slot], start + 60 * 1000 - 1).length, 1);
-  assert.equal(dueShifts([slot], start + 60 * 1000).length, 0);
+  assert.equal(dueShifts([slot], start + 30 * 60 * 1000).length, 1);
+  assert.equal(dueShifts([slot], start + 60 * 60 * 1000).length, 0);
+  assert.equal(dueShifts([wrap], wrap.startMs + 30 * 60 * 1000).length, 1);
+  assert.equal(dueShifts([wrap], wrap.startMs + 60 * 60 * 1000).length, 0);
   const empty: ShiftSlot = { ...slot, names: [] };
-  assert.equal(dueShifts([empty], start - 1).length, 0);
+  assert.equal(dueShifts([empty], start).length, 0);
 });
 
 test("担当をメンションし、表にない名前はそのまま出す", () => {
