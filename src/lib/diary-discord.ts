@@ -5,7 +5,7 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
     { names: ["モリキリデコイツ"], userId: "258972154421444609" },
     { names: ["BigMaus"], userId: "607596921577537557" },
     { names: ["うさえ"], userId: "231585635381542913" },
-    { names: ["Neruyo"], userId: "624628070414024717" },
+    { names: ["Neruyo", "ねるよ"], userId: "624628070414024717" },
     { names: ["しゃげ"], userId: "523095960050597889" },
     { names: ["よほた"], userId: "559009226618437642" },
     { names: ["てれ", "Telepath"], userId: "386883728099639298" },
@@ -17,20 +17,20 @@ const ROTATION: Record<string, Array<{ names: string[]; userId: string }>> = {
     { names: ["さばみそ"], userId: "439009179827699712" },
     { names: ["ron3lyscript"], userId: "307163554279194625" },
     { names: ["がんも"], userId: "412124878641168385" },
-    { names: ["s3atake"], userId: "134983599270264832" },
+    { names: ["s3atake", "しいたけ"], userId: "134983599270264832" },
   ],
   "3組": [
     { names: ["SMACK17"], userId: "307161223311523860" },
     { names: ["あまのがわ"], userId: "325945987954638851" },
     { names: ["うさぎつね", "Oage"], userId: "249196362955096076" },
     { names: ["ADOL"], userId: "710437686229467236" },
-    { names: ["茅野Chino"], userId: "869222360006410290" },
-    { names: ["ジャック"], userId: "387261715428933632" },
+    { names: ["茅野Chino", "ちの"], userId: "869222360006410290" },
+    { names: ["ジャック", "Jackit"], userId: "387261715428933632" },
     { names: ["まーしぃ"], userId: "561010990393851959" },
   ],
   "4組": [
     { names: ["kurank"], userId: "438171926481993728" },
-    { names: ["TamolarM"], userId: "422741468030173196" },
+    { names: ["TamolarM", "たもらーむ"], userId: "422741468030173196" },
     { names: ["ちくわぶ"], userId: "404952149953609738" },
     { names: ["サファリ"], userId: "1303348238866321484" },
     { names: ["ふにゃ"], userId: "254215883478663170" },
@@ -74,6 +74,22 @@ function nameOverlaps(alias: string, key: string): boolean {
   const short = name.length < key.length ? name : key;
   if ([...short].length < 2) return false;
   return name.includes(key) || key.includes(name);
+}
+
+/** 表の誰か。組は見ない。複数人に当たれば null。 */
+export function diaryUserId(name: string): string | null {
+  const key = normalizeDiaryName(name);
+  if (!key) return null;
+  const hits = new Set<string>();
+  for (const group of Object.values(ROTATION)) {
+    for (const person of group) {
+      if (person.names.some((alias) => nameOverlaps(alias, key))) {
+        hits.add(person.userId);
+      }
+    }
+  }
+  if (hits.size !== 1) return null;
+  return [...hits][0];
 }
 
 /** 同じ組の次の人。投稿名が表の名前を含めばその人。組をまたがない。複数人に当たれば null。 */
